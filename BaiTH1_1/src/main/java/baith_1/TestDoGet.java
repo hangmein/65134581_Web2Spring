@@ -38,9 +38,6 @@ public class TestDoGet extends HttpServlet {
 		out.println("<h2>Test phương thức doGet</h2>");
 		out.println("<p>Họ tên: Huỳnh Đức Nghĩa</p>");
 		out.println("<p>MSSV: 65134581</p>");
-		
-		
-		
 	}
 
 	/**
