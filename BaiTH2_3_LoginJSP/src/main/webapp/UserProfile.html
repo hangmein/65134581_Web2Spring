@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân | Huỳnh Đức Nghĩa</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;     
+            min-height: 100vh;       
+            margin: 0;
+        }
+        .card {
+            background-color: white;
+            width: 350px;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            text-align: center;
+        }
+        .avatar-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;       
+            border-radius: 50%;      
+            border: 5px solid #e7f3ff;
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #333;
+            margin: 10px 0 5px 0;
+        }
+        .subtitle {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        .info-list {
+            text-align: left;           
+            background-color: #fafafa;  
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+        .info-item {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0; 
+            color: #444;
+        }
+        .info-item:last-child {
+            border-bottom: none;       
+            margin-bottom: 0;
+        }
+        .label {
+            font-weight: bold;
+            color: #555;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <img src="images/nghia_dep_trai.jpg" alt="Huỳnh Đức Nghĩa" class="avatar-img">
+        
+        <h2>Huỳnh Đức Nghĩa</h2>
+        <div class="subtitle">Sinh viên CNTT - Đại học Nha Trang</div>
+
+        <div class="info-list">
+            <div class="info-item">
+                <span class="label">MSSV:</span> 65134581
+            </div>
+            <div class="info-item">
+                <span class="label">Lớp:</span> 65.CNTT-CLC
+            </div>
+            <div class="info-item">
+                <span class="label">Sở thích:</span> Game, Code dạo
+            </div>
+            <div class="info-item">
+                <span class="label">Email:</span> nghia@gmail.com
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
