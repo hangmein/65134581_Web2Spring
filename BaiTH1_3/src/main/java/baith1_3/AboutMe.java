@@ -8,9 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * Servlet implementation class AboutMe
- */
 @WebServlet("/AboutMe")
 public class AboutMe extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -20,20 +17,18 @@ public class AboutMe extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 1. Cấu hình trả về tiếng Việt
 		response.setContentType("text/html;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
 		PrintWriter out = response.getWriter();
 		
-		// 2. Dùng Text Block (Java 15+) để chứa HTML cho gọn
 		String htmlContent = """
 			<!DOCTYPE html>
 			<html lang="vi">
 			<head>
 			    <meta charset="UTF-8">
 			    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-			    <title>mệt vãi lồn, mún yêu vãi lồn</title>
+			    <title>mệt mún chớt</title>
 			    <style>
 			        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
 			        
@@ -41,10 +36,9 @@ public class AboutMe extends HttpServlet {
 			        
 			        .subtitle { color: #777; font-size: 14px; margin-bottom: 20px; }
 			        
-			        /* Đã sửa lỗi thừa dấu ngoặc kép ở trên */
 			        .info-list {
 			            text-align: left;
-			            background-color: #fafafa; /* Màu nền xám nhạt */
+			            background-color: #fafafa; /
 			            padding: 20px;
 			            border-radius: 12px;
 			            margin-top: 20px;
