@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.PageRepository;
 import com.example.demo.Pages;
+import com.example.demo.Service.PageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +14,12 @@ import java.util.List;
 public class PageController {
 	
 	@Autowired
-    private PageRepository pageRepository;
-    @GetMapping("/all")
+    PageService pService;
+	
+    @GetMapping("/restAPI/page/all")
     public List<Pages> getAllPage() {
-        return pageRepository.findAll();
+        List<Pages> dsTrang = new ArrayList<Pages>();
+        dsTrang = pService.getAllPage();
+        return dsTrang;
     }
 }
