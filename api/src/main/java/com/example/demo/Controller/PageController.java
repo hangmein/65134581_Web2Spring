@@ -11,12 +11,11 @@ import java.util.List;
 
 @RestController
 public class PageController {
-
-	@GetMapping("restAPI/page/all")
-	public ArrayList<Pages> getAllPage()
-	{
-		ArrayList<Pages> dsTrang = new ArrayList<Pages>();
-		dsTrang.add(new Pages(0, "Trang chủ", "từ khóa", "nội dung", 0));
-		return dsTrang;
-	}
+	
+	@Autowired
+    private PageRepository pageRepository;
+    @GetMapping("/all")
+    public List<Pages> getAllPage() {
+        return pageRepository.findAll();
+    }
 }

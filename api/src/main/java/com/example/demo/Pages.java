@@ -12,7 +12,7 @@ public class Pages {
 	@Column(name="id")
 	int id;
 	
-	@Column(name="pageName")
+	@Column(name="pagename")
 	String pageName;
 	
 	@Column(name="keyword")
@@ -21,9 +21,9 @@ public class Pages {
 	@Column(name="content")
 	String Content;
 	
-	@Column(name="parentPageId")
+	@Column(name="parentpageid")
 	int parentPageId;
-
+	public Pages() {}
 	public Pages(int id, String pageName, String keyWord, String content, int parentPageId) {
 		super();
 		this.id = id;
