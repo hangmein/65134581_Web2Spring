@@ -22,4 +22,9 @@ public class PageController {
         dsTrang = pService.getAllPage();
         return dsTrang;
     }
+    @GetMapping("/restAPI/page/{id}")
+	public Pages getPage(@PathVariable("id") int id)
+	{
+    	return pService.getPageById(id);
+	}
 }
