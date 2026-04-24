@@ -33,11 +33,22 @@ public class SanPham {
     @JsonIgnore 
     private TheLoaiSanPham theLoai;
 
-    // --- Constructor ---
     public SanPham() {}
+    
+    
 
-    // --- Getters and Setters ---
-    public Integer getMaSP() { return maSP; }
+    public SanPham(Integer maSP, String tenSP, BigDecimal soTien, String moTa, TheLoaiSanPham theLoai) {
+		super();
+		this.maSP = maSP;
+		this.tenSP = tenSP;
+		this.soTien = soTien;
+		this.moTa = moTa;
+		this.theLoai = theLoai;
+	}
+
+
+
+	public Integer getMaSP() { return maSP; }
     public void setMaSP(Integer maSP) { this.maSP = maSP; }
 
     public String getTenSP() { return tenSP; }
@@ -50,4 +61,6 @@ public class SanPham {
     public void setMoTa(String moTa) { this.moTa = moTa; }
 
     public TheLoaiSanPham getTheLoai() { return theLoai; }
-    public void setTheLoai(TheLoaiSanPham theLoai) { this.theLoai = theLoai; }
+    public void setTheLoai(TheLoaiSanPham theLoai) { this.theLoai = theLoai; 
+    }
+}
