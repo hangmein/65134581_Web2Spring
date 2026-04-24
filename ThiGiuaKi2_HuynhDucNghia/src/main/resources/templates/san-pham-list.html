@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sản phẩm theo thể loại</title>
+</head>
+<body>
+    <h1>Sản phẩm thuộc nhóm: <span th:text="${tenTheLoai}"></span></h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Mã SP</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá tiền</th>
+                <th>Mô tả</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="sp : ${dsSanPham}">
+                <td th:text="${sp.maSP}">1</td>
+                <td th:text="${sp.tenSP}">Tên</td>
+                <td th:text="${#numbers.formatDecimal(sp.soTien, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0</td>
+                <td th:text="${sp.moTa}">Mô tả</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <a href="/san-pham/the-loai">Quay lại danh sách thể loại</a>
+</body>
+</html>

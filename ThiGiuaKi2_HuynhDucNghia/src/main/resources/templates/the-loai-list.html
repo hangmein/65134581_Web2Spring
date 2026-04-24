@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh mục sản phẩm</title>
+    <style>
+        .category-card { border: 1px solid #ccc; padding: 15px; margin: 10px; border-radius: 8px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h1>Danh sách thể loại</h1>
+    <div th:each="tl : ${dsTheLoai}" class="category-card">
+        <h3 th:text="${tl.tenTheLoai}">Tên thể loại</h3>
+        <p th:text="${tl.moTa}">Mô tả</p>
+        <a th:href="@{'/san-pham/the-loai/' + ${tl.maTheLoai}}">Xem sản phẩm</a>
+    </div>
+</body>
+</html>

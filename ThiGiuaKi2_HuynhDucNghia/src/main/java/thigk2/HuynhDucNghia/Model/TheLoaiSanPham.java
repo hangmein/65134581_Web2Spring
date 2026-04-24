@@ -9,31 +9,29 @@ public class TheLoaiSanPham {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Column(name = "maTheLoai")
     private Integer maTheLoai;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "tenTheLoai", nullable = false, length = 255)
     private String tenTheLoai;
 
-    @Column(columnDefinition = "TEXT") 
+    @Column(name = "moTa", columnDefinition = "TEXT") 
     private String moTa;
 
     @OneToMany(mappedBy = "theLoai", cascade = CascadeType.ALL)
     private List<SanPham> danhSachSanPham;
 
-
     public TheLoaiSanPham() {}
-    
-    
 
     public TheLoaiSanPham(Integer maTheLoai, String tenTheLoai, String moTa, List<SanPham> danhSachSanPham) {
-		super();
-		this.maTheLoai = maTheLoai;
-		this.tenTheLoai = tenTheLoai;
-		this.moTa = moTa;
-		this.danhSachSanPham = danhSachSanPham;
-	}
+        super();
+        this.maTheLoai = maTheLoai;
+        this.tenTheLoai = tenTheLoai;
+        this.moTa = moTa;
+        this.danhSachSanPham = danhSachSanPham;
+    }
 
-	public Integer getMaTheLoai() { return maTheLoai; }
+    public Integer getMaTheLoai() { return maTheLoai; }
     public void setMaTheLoai(Integer maTheLoai) { this.maTheLoai = maTheLoai; }
 
     public String getTenTheLoai() { return tenTheLoai; }

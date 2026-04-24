@@ -17,21 +17,22 @@ import jakarta.persistence.Table;
 @Table(name="sanpham")
 public class SanPham {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer maSP;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "maSP")
+	private Integer maSP;
 
-    @Column(nullable = false, length = 255)
-    private String tenSP;
+	@Column(name = "tenSP", nullable = false)
+	private String tenSP;
 
-    @Column(nullable = false, precision = 15, scale = 2) 
-    private BigDecimal soTien;
+	@Column(name = "soTien", nullable = false)
+	private BigDecimal soTien;
 
-    @Column(columnDefinition = "TEXT")
-    private String moTa;
-    @ManyToOne
-    @JoinColumn(name = "maTheLoai", nullable = false) 
-    @JsonIgnore 
-    private TheLoaiSanPham theLoai;
+	@Column(name = "moTa")
+	private String moTa;
+
+	@ManyToOne
+	@JoinColumn(name = "maTheLoai", nullable = false)
+	private TheLoaiSanPham theLoai;
 
     public SanPham() {}
     
