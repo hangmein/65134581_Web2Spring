@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page List - Huỳnh Đức Nghĩa</title>
+    <style>
+        /* Giữ nguyên CSS của trang Dashboard */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f4f4f4; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 1100px; border: 2px solid #333; background: #fff; display: flex; flex-direction: column; box-shadow: 10px 10px 0px #333; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding: 10px 20px; background: #fff; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo { height: 60px; }
+        .school-info { line-height: 1.3; }
+        .faculty-name { font-size: 16px; font-weight: bold; color: #d32f2f; }
+        .user-tag { font-size: 20px; border: 1px solid #333; padding: 5px 15px; background: #f9f9f9; }
+        .main-layout { display: flex; min-height: 600px; }
+        .sidebar { width: 260px; border-right: 2px solid #333; background: #fff; display: flex; flex-direction: column; }
+        .nav-btn { display: block; padding: 15px 20px; border: none; border-bottom: 1px solid #333; background: #fff; color: #000; text-align: left; text-decoration: none; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .nav-btn:hover { background-color: #d32f2f; color: #fff; padding-left: 30px; }
+        .nav-btn.active { background-color: #333; color: #fff; font-size: 18px; }
+        .empty-box { height: 50px; border-bottom: 1px solid #333; }
+        .empty-nav { flex-grow: 1; background: #fff; }
+        .content { flex-grow: 1; background-color: #ebebeb; padding: 40px; }
+        .content-box { background: #fff; padding: 30px; border: 1px solid #ccc; min-height: 100%; }
+        h2 { border-left: 6px solid #d32f2f; padding-left: 15px; margin-bottom: 20px; text-transform: uppercase; }
+        .footer { border-top: 2px solid #333; text-align: center; padding: 15px; font-size: 18px; font-weight: bold; }
+
+        /* CSS bổ sung cho Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; }
+        table, th, td { border: 1px solid #333; }
+        th { background-color: #f2f2f2; padding: 12px; text-align: center; }
+        td { padding: 10px; text-align: center; }
+        .action-links a { text-decoration: none; margin: 0 5px; font-weight: bold; color: #007bff; }
+        .action-links a.delete { color: #d32f2f; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo-section">
+                <img src="https://upload.wikimedia.org/wikipedia/vi/c/c7/Logo_Đại_học_Nha_Trang.png" alt="NTU" class="logo">
+                <div class="school-info">
+                    <div class="school-name">TRƯỜNG ĐẠI HỌC NHA TRANG</div>
+                    <div class="faculty-name">KHOA CÔNG NGHỆ THÔNG TIN</div>
+                </div>
+            </div>
+            <div class="user-tag">[Huỳnh Đức Nghĩa]</div>
+        </header>
+
+        <div class="main-layout">
+            <nav class="sidebar">
+                <a th:href="@{/dashboard}" class="nav-btn">Dashboard</a>
+                <a th:href="@{/page/list}" class="nav-btn active">Page - List</a>
+                <a th:href="@{/page/new}" class="nav-btn">Page - Addnew</a>
+                <a href="/post/list" class="nav-btn">Post - List</a>
+                <a href="/post/add" class="nav-btn">Post - Addnew</a>
+                
+                <div class="empty-box"></div>
+                <div class="empty-box"></div>
+                <div class="empty-nav"></div>
+            </nav>
+
+            <main class="content">
+                <div class="content-box">
+                    <h2>Danh sách Page</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Pagename</th>
+                                <th>parentPageId</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="p : ${pages}">
+                                <td th:text="${p.id}"></td>
+                                <td th:text="${p.pageName}"></td>
+                                <td th:text="${p.parentPageId}"></td>
+                                <td class="action-links">
+                                    <a th:href="@{/page/view/{id}(id=${p.id})}">[view]</a>
+                                    <a href="#">[edit]</a>
+                                    <a th:href="@{/page/delete/{id}(id=${p.id})}" 
+                                       class="delete" 
+                                       onclick="return confirm('Nghĩa chắc chắn muốn xóa không?')">[delete]</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+
+        <footer class="footer">
+            ©2025 by Huỳnh Đức Nghĩa – FIT.NTU
+        </footer>
+    </div>
+
+</body>
+</html>

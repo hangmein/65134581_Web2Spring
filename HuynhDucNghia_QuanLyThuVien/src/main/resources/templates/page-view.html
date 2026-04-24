@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết Page - Huỳnh Đức Nghĩa</title>
+    <style>
+        /* Giữ nguyên CSS đồng bộ với toàn bộ hệ thống */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f4f4f4; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 1100px; border: 2px solid #333; background: #fff; display: flex; flex-direction: column; box-shadow: 10px 10px 0px #333; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding: 10px 20px; background: #fff; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo { height: 60px; }
+        .faculty-name { font-size: 16px; font-weight: bold; color: #d32f2f; }
+        .user-tag { font-size: 20px; border: 1px solid #333; padding: 5px 15px; background: #f9f9f9; }
+        .main-layout { display: flex; min-height: 600px; }
+        .sidebar { width: 260px; border-right: 2px solid #333; background: #fff; display: flex; flex-direction: column; }
+        .nav-btn { display: block; padding: 15px 20px; border: none; border-bottom: 1px solid #333; background: #fff; color: #000; text-align: left; text-decoration: none; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .nav-btn:hover { background-color: #d32f2f; color: #fff; }
+        .nav-btn.active { background-color: #333; color: #fff; }
+        .empty-box { height: 50px; border-bottom: 1px solid #333; }
+        .empty-nav { flex-grow: 1; }
+        .content { flex-grow: 1; background-color: #ebebeb; padding: 40px; }
+        .content-box { background: #fff; padding: 30px; border: 1px solid #ccc; min-height: 100%; }
+        h2 { border-left: 6px solid #d32f2f; padding-left: 15px; margin-bottom: 20px; text-transform: uppercase; }
+        .footer { border-top: 2px solid #333; text-align: center; padding: 15px; font-size: 18px; font-weight: bold; }
+
+        /* CSS riêng cho View detail */
+        .info-row { margin-bottom: 15px; font-size: 16px; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
+        .info-label { font-weight: bold; width: 150px; display: inline-block; color: #333; }
+        .content-area { background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-top: 10px; min-height: 100px; }
+        .btn-back { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #333; color: #fff; text-decoration: none; font-weight: bold; }
+        .btn-back:hover { background: #d32f2f; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo-section">
+                <img src="https://upload.wikimedia.org/wikipedia/vi/c/c7/Logo_Đại_học_Nha_Trang.png" alt="NTU" class="logo">
+                <div class="school-info">
+                    <div class="school-name">TRƯỜNG ĐẠI HỌC NHA TRANG</div>
+                    <div class="faculty-name">KHOA CÔNG NGHỆ THÔNG TIN</div>
+                </div>
+            </div>
+            <div class="user-tag">[Huỳnh Đức Nghĩa]</div>
+        </header>
+
+        <div class="main-layout">
+            <nav class="sidebar">
+                <a th:href="@{/dashboard}" class="nav-btn">Dashboard</a>
+                <a th:href="@{/page/all}" class="nav-btn">Page - List</a>
+                <a th:href="@{/page/new}" class="nav-btn">Page - Addnew</a>
+                <a href="/post/list" class="nav-btn">Post - List</a>
+                <a href="/post/add" class="nav-btn">Post - Addnew</a>
+                <div class="empty-box"></div>
+                <div class="empty-box"></div>
+                <div class="empty-nav"></div>
+            </nav>
+
+            <main class="content">
+                <div class="content-box">
+                    <h2>Chi tiết Page</h2>
+                    
+                    <div th:if="${page != null}">
+                        <div class="info-row">
+                            <span class="info-label">ID:</span>
+                            <span th:text="${page.id}"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Tên trang:</span>
+                            <span th:text="${page.pageName}"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Từ khóa:</span>
+                            <span th:text="${page.keyword}"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">ID trang cha:</span>
+                            <span th:text="${page.parentPageId}"></span>
+                        </div>
+                        <div class="info-group">
+                            <p class="info-label">Nội dung trang:</p>
+                            <div class="content-area" th:text="${page.content}"></div>
+                        </div>
+                    </div>
+
+                    <div th:unless="${page != null}">
+                        <p style="color: red; font-weight: bold;">⚠️ Lỗi: Không tìm thấy thông tin trang này, Nghĩa ơi!</p>
+                    </div>
+
+                    <a th:href="@{/page/list}" class="btn-back">Quay lại danh sách</a>
+                </div>
+            </main>
+        </div>
+
+        <footer class="footer">
+            ©2025 by Huỳnh Đức Nghĩa – FIT.NTU
+        </footer>
+    </div>
+
+</body>
+</html>
