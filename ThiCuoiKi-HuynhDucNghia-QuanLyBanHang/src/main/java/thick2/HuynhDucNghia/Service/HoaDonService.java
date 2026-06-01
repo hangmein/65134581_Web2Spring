@@ -79,7 +79,6 @@ public class HoaDonService {
         hoaDonRepo.save(hd);
         return hd;
     }
-
     @Transactional
     public void xoaHoaDon(Integer id) {
         HoaDon hd = getById(id);

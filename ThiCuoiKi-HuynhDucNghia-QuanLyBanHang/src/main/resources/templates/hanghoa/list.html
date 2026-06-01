@@ -21,7 +21,13 @@
 
     <form class="search" method="get" th:action="@{/hanghoa}">
         <input type="text" name="keyword" th:value="${keyword}" placeholder="Tim theo ten...">
-        <button class="btn btn-dark" type="submit">Tim</button>
+        <select name="maLoaiHang" style="background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:14px">
+            <option value="">-- Tat ca loai --</option>
+            <option th:each="l : ${dsLoai}" th:value="${l.maLoaiHang}"
+                    th:text="${l.tenLoaiHang}"
+                    th:selected="${maLoaiHangLoc != null and maLoaiHangLoc == l.maLoaiHang}"></option>
+        </select>
+        <button class="btn btn-dark" type="submit">Loc</button>
         <a class="btn btn-ghost" th:href="@{/hanghoa}">Xoa loc</a>
     </form>
 
@@ -32,7 +38,7 @@
                 <th class="right">Ton</th><th class="center">Thao tac</th></tr>
             </thead>
             <tbody>
-            <tr th:if="${danhSach.isEmpty()}"><td colspan="6" class="empty">Chua co hang hoa.</td></tr>
+            <tr th:if="${danhSach.isEmpty()}"><td colspan="6" class="empty">Khong co hang hoa phu hop.</td></tr>
             <tr th:each="hh : ${danhSach}">
                 <td th:text="${hh.maHangHoa}">1</td>
                 <td class="bold" th:text="${hh.tenHangHoa}">Ten</td>

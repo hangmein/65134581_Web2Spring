@@ -11,43 +11,35 @@
     <header class="topbar">
         <div class="brand"><span class="logo">⚡</span>
             <div><h1 th:text="'Hoa don #' + ${hoaDon.maHoaDon}">Hoa don</h1>
-                 <p th:text="${hoaDon.tenKhachHang} + ' - ' + ${hoaDon.soDienThoai}">KH</p></div>
+                 <p th:text="${#temporals.format(hoaDon.ngayLap, 'dd/MM/yyyy HH:mm')}">--</p></div>
         </div>
         <a class="btn btn-ghost" th:href="@{/hoadon}">&larr; Danh sach</a>
     </header>
 
-    <p class="err-box" th:if="${loi}" th:text="${loi}"></p>
+    <p class="err-box" th:if="${thanhCong}" th:text="${thanhCong}"
+       style="background:rgba(46,204,143,.12);border-color:rgba(46,204,143,.4);color:var(--green)"></p>
 
-    <div class="form-card" style="margin-bottom:20px">
-        <h3 style="margin-bottom:14px">Them san pham</h3>
-        <form method="post" th:action="@{/hoadon/{id}/themdong(id=${hoaDon.maHoaDon})}" class="inline-form">
-            <select name="maHangHoa" required>
-                <option value="">-- Chon san pham --</option>
-                <option th:each="hh : ${dsHangHoa}" th:value="${hh.maHangHoa}"
-                        th:text="${hh.tenHangHoa} + ' (ton: ' + ${hh.soLuongTon} + ')'"></option>
-            </select>
-            <input type="number" name="soLuong" value="1" min="1" style="width:90px">
-            <button class="btn btn-primary" type="submit">Them</button>
-        </form>
+    <div class="form-card" style="margin-bottom:18px">
+        <div class="row">
+            <div><span class="muted">Khach hang:</span> <span class="bold" th:text="${hoaDon.tenKhachHang}">--</span></div>
+            <div><span class="muted">SDT:</span> <span class="bold" th:text="${hoaDon.soDienThoai}">--</span></div>
+        </div>
+        <div style="margin-top:10px"><span class="muted">Nhan vien lap:</span>
+            <span class="bold" th:text="${hoaDon.nguoiDung != null ? hoaDon.nguoiDung.hoTen : ''}">--</span></div>
     </div>
 
     <div class="table-card">
         <table>
             <thead>
-            <tr><th>San pham</th><th class="right">Don gia</th><th class="right">SL</th>
-                <th class="right">Thanh tien</th><th class="center">Xoa</th></tr>
+            <tr><th>San pham</th><th class="right">Don gia</th><th class="right">SL</th><th class="right">Thanh tien</th></tr>
             </thead>
             <tbody>
-            <tr th:if="${hoaDon.chiTiet.isEmpty()}"><td colspan="5" class="empty">Chua co san pham.</td></tr>
+            <tr th:if="${hoaDon.chiTiet.isEmpty()}"><td colspan="4" class="empty">Khong co san pham.</td></tr>
             <tr th:each="ct : ${hoaDon.chiTiet}">
                 <td class="bold" th:text="${ct.hangHoa.tenHangHoa}">SP</td>
                 <td class="right" th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')}">0</td>
                 <td class="right" th:text="${ct.soLuong}">0</td>
                 <td class="right" th:text="${#numbers.formatDecimal(ct.thanhTien, 0, 'COMMA', 0, 'POINT')}">0</td>
-                <td class="center">
-                    <a class="btn btn-sm btn-del"
-                       th:href="@{/hoadon/{id}/xoadong/{ct}(id=${hoaDon.maHoaDon}, ct=${ct.maChiTiet})}">Xoa</a>
-                </td>
             </tr>
             </tbody>
             <tfoot>
@@ -55,10 +47,15 @@
                 <td colspan="3" class="right bold">TONG TIEN</td>
                 <td class="right bold" style="color:var(--primary)"
                     th:text="${#numbers.formatDecimal(hoaDon.tongTien, 0, 'COMMA', 0, 'POINT')} + ' d'">0</td>
-                <td></td>
             </tr>
             </tfoot>
         </table>
+    </div>
+
+    <div class="form-actions" style="margin-top:18px">
+        <a class="btn btn-primary" th:href="@{/hoadon/them}">+ Lap phieu moi</a>
+        <a class="btn btn-del" th:href="@{/hoadon/xoa/{id}(id=${hoaDon.maHoaDon})}"
+           onclick="return confirm('Xoa hoa don nay? (so luong se duoc hoan lai kho)');">Xoa hoa don</a>
     </div>
 </div>
 </body>

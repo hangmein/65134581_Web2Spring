@@ -23,10 +23,13 @@ public class HangHoaController {
 
     @GetMapping
     public String list(@RequestParam(required = false) String keyword,
+                       @RequestParam(required = false) Integer maLoaiHang,
                        HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
-        model.addAttribute("danhSach", service.search(keyword));
+        model.addAttribute("danhSach", service.loc(keyword, maLoaiHang));
         model.addAttribute("keyword", keyword);
+        model.addAttribute("maLoaiHangLoc", maLoaiHang);
+        model.addAttribute("dsLoai", loaiHangService.getAll());
         return "hanghoa/list";
     }
 

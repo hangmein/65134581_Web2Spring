@@ -1,5 +1,7 @@
 package thick2.HuynhDucNghia.HomeController;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,20 +29,30 @@ public class HoaDonController {
         model.addAttribute("danhSach", hoaDonService.getAll());
         return "hoadon/list";
     }
+
     @GetMapping("/them")
     public String themForm(HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
-        model.addAttribute("hoaDon", new HoaDon());
+        model.addAttribute("dsHangHoa", hangHoaService.getAll());
         return "hoadon/form";
     }
 
     @PostMapping("/luu")
-    public String luu(@ModelAttribute HoaDon hoaDon, HttpSession session) {
+    public String luu(@RequestParam(required = false) String tenKhachHang,
+                      @RequestParam(required = false) String soDienThoai,
+                      @RequestParam(name = "maHangHoa", required = false) List<Integer> maHangHoa,
+                      @RequestParam(name = "soLuong", required = false) List<Integer> soLuong,
+                      HttpSession session, RedirectAttributes ra) {
         NguoiDung user = (NguoiDung) session.getAttribute("user");
         if (user == null) return "redirect:/login";
-        hoaDon.setNguoiDung(user);
-        HoaDon saved = hoaDonService.taoHoaDon(hoaDon);
-        return "redirect:/hoadon/" + saved.getMaHoaDon();
+        try {
+            HoaDon hd = hoaDonService.lapHoaDon(user, tenKhachHang, soDienThoai, maHangHoa, soLuong);
+            ra.addFlashAttribute("thanhCong", "Lap hoa don thanh cong!");
+            return "redirect:/hoadon/" + hd.getMaHoaDon();
+        } catch (IllegalArgumentException ex) {
+            ra.addFlashAttribute("loi", ex.getMessage());
+            return "redirect:/hoadon/them";
+        }
     }
 
     @GetMapping("/{id}")
@@ -49,23 +61,7 @@ public class HoaDonController {
         HoaDon hd = hoaDonService.getById(id);
         if (hd == null) return "redirect:/hoadon";
         model.addAttribute("hoaDon", hd);
-        model.addAttribute("dsHangHoa", hangHoaService.getAll());
         return "hoadon/detail";
-    }
-
-    @PostMapping("/{id}/themdong")
-    public String themDong(@PathVariable Integer id,
-                           @RequestParam Integer maHangHoa,
-                           @RequestParam int soLuong,
-                           RedirectAttributes ra) {
-        String loi = hoaDonService.themDong(id, maHangHoa, soLuong);
-        if (loi != null) ra.addFlashAttribute("loi", loi);
-        return "redirect:/hoadon/" + id;
-    }
-    @GetMapping("/{id}/xoadong/{maChiTiet}")
-    public String xoaDong(@PathVariable Integer id, @PathVariable Integer maChiTiet) {
-        hoaDonService.xoaDong(maChiTiet);
-        return "redirect:/hoadon/" + id;
     }
 
     @GetMapping("/xoa/{id}")
