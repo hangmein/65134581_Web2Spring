@@ -36,7 +36,7 @@
                 <a class="btn btn-ghost" th:href="@{/hanghoa}">Xóa lọc</a>
             </form>
 
-            <a class="btn" style="background: var(--primary); color: white;" th:href="@{/hanghoa/them}">+ Thêm hàng hóa mới</a>
+            <a th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="btn" style="background: var(--primary); color: white;" th:href="@{/hanghoa/them}">+ Thêm hàng hóa mới</a>
         </div>
 
         <div class="panel">
@@ -48,12 +48,12 @@
                         <th>Loại hàng</th>
                         <th class="right">Đơn giá</th>
                         <th class="right">Tồn kho</th>
-                        <th class="center">Thao tác</th>
+                        <th th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="center">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:if="${#lists.isEmpty(danhSach)}">
-                        <td colspan="6" class="empty">Không tìm thấy hàng hóa nào phù hợp.</td>
+                        <td th:colspan="${session.user != null && session.user.vaiTro == 'Admin' ? 6 : 5}" class="empty">Không tìm thấy hàng hóa nào phù hợp.</td>
                     </tr>
                     <tr th:each="hh : ${danhSach}">
                         <td th:text="${hh.maHangHoa}">1</td>
@@ -64,7 +64,7 @@
                             <span th:if="${hh.soLuongTon > 5}" th:text="${hh.soLuongTon}"></span>
                             <span th:if="${hh.soLuongTon <= 5}" class="badge-warn" th:text="${hh.soLuongTon} + ' (Sắp hết)'"></span>
                         </td>
-                        <td class="center">
+                        <td th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="center">
                             <a class="btn btn-sm btn-edit" th:href="@{/hanghoa/sua/{id}(id=${hh.maHangHoa})}">Sửa</a>
                             <a class="btn btn-sm" style="background: #fce4e4; color: var(--red); padding: 6px 12px; font-size: 13px;" th:href="@{/hanghoa/xoa/{id}(id=${hh.maHangHoa})}" onclick="return confirm('Bạn có chắc chắn muốn xóa mặt hàng này?');">Xóa</a>
                         </td>

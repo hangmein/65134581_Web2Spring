@@ -22,6 +22,7 @@ public class NguoiDungController {
     public String list(@RequestParam(value = "keyword", required = false) String keyword,
                        HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
+        
         model.addAttribute("danhSach", service.search(keyword));
         model.addAttribute("keyword", keyword);
         return "nguoidung/list";
@@ -30,6 +31,10 @@ public class NguoiDungController {
     @GetMapping("/them")
     public String themForm(HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
+        NguoiDung user = (NguoiDung) session.getAttribute("user");
+        if (user == null || !"Admin".equals(user.getVaiTro())) {
+            return "redirect:/"; 
+        }
         model.addAttribute("nhanVien", new NguoiDung());
         model.addAttribute("tieuDe", "Thêm nhân viên mới");
         return "nguoidung/form";

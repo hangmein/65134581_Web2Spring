@@ -31,9 +31,11 @@
         </section>
 
         <div class="quick-links">
-            <a class="ql-card" th:href="@{/hanghoa/them}">+ Thêm Hàng Hóa Mới</a>
-            <a class="ql-card" th:href="@{/hoadon/them}">✍️ Lập Hóa Đơn Mới</a>
-            <a class="ql-card" th:href="@{/loaihang/them}">+ Thêm Loại Hàng</a>
+            <a th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="ql-card" th:href="@{/hanghoa/them}">📦 Thêm Hàng Hóa Mới</a>
+            
+            <a th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="ql-card" th:href="@{/loaihang/them}">🏷️ Thêm Danh Mục</a>
+
+            <a th:if="${session.user != null && session.user.vaiTro == 'NhanVien'}" class="ql-card" th:href="@{/hoadon/them}">✍️ Lập Hóa Đơn Mới</a>
         </div>
 
         <div class="dash-row">

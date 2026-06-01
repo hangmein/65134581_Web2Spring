@@ -26,7 +26,8 @@
                 <button class="btn" style="background: var(--text-main); color: white;" type="submit">Tìm kiếm</button>
                 <a class="btn btn-ghost" th:href="@{/nhanvien}">Xóa lọc</a>
             </form>
-            <a class="btn" style="background: var(--primary); color: white; padding: 10px 20px;" th:href="@{/nhanvien/them}">+ Thêm Nhân viên</a>
+            
+            <a th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="btn" style="background: var(--primary); color: white; padding: 10px 20px;" th:href="@{/nhanvien/them}">+ Thêm Nhân viên</a>
         </div>
 
         <div class="panel">
@@ -38,12 +39,12 @@
                         <th>Tên đăng nhập</th>
                         <th>Vai trò</th>
                         <th>Ngày tạo tài khoản</th>
-                        <th class="center">Thao tác</th>
+                        <th th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="center">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:if="${#lists.isEmpty(danhSach)}">
-                        <td colspan="6" class="empty">Không tìm thấy tài khoản nhân viên nào.</td>
+                        <td th:colspan="${session.user != null && session.user.vaiTro == 'Admin' ? 6 : 5}" class="empty">Không tìm thấy tài khoản nhân viên nào.</td>
                     </tr>
                     <tr th:each="nv : ${danhSach}">
                         <td th:text="${nv.maNguoiDung}">1</td>
@@ -54,7 +55,8 @@
                             <span th:if="${nv.vaiTro != 'Admin'}" class="badge-warn" th:text="${nv.vaiTro}"></span>
                         </td>
                         <td style="color: var(--text-muted);" th:text="${#temporals.format(nv.ngayTao, 'dd/MM/yyyy HH:mm')}">--</td>
-                        <td class="center">
+                        
+                        <td th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="center">
                             <a class="btn btn-sm btn-edit" th:href="@{/nhanvien/sua/{id}(id=${nv.maNguoiDung})}">Sửa</a>
                             <a class="btn btn-sm" style="background: #fce4e4; color: var(--red); padding: 6px 12px; font-size: 13px;" th:href="@{/nhanvien/xoa/{id}(id=${nv.maNguoiDung})}" onclick="return confirm('Xóa tài khoản nhân viên này? Người này sẽ không thể đăng nhập được nữa.');">Xóa</a>
                         </td>

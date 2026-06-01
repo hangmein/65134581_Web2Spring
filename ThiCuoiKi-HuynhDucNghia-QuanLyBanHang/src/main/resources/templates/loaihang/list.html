@@ -10,6 +10,7 @@
 <div class="app-container">
 
     <aside th:replace="~{fragments/sidebar :: sidebar('loaihang')}"></aside>
+    
     <main class="main-content">
         
         <header class="topbar">
@@ -27,7 +28,7 @@
                 <a class="btn btn-ghost" th:href="@{/loaihang}">Xóa lọc</a>
             </form>
 
-            <a class="btn" style="background: var(--primary); color: white; padding: 10px 20px;" th:href="@{/loaihang/them}">+ Thêm Danh mục mới</a>
+            <a th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="btn" style="background: var(--primary); color: white; padding: 10px 20px;" th:href="@{/loaihang/them}">+ Thêm Danh mục mới</a>
         </div>
 
         <div class="panel">
@@ -37,18 +38,19 @@
                         <th>ID</th>
                         <th>Tên phân loại</th>
                         <th>Mô tả chi tiết</th>
-                        <th class="center">Thao tác</th>
+                        <th th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="center">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:if="${#lists.isEmpty(danhSach)}">
-                        <td colspan="4" class="empty">Không tìm thấy danh mục nào phù hợp.</td>
+                        <td th:colspan="${session.user != null && session.user.vaiTro == 'Admin' ? 4 : 3}" class="empty">Không tìm thấy danh mục nào phù hợp.</td>
                     </tr>
                     <tr th:each="lh : ${danhSach}">
                         <td th:text="${lh.maLoaiHang}">1</td>
                         <td class="bold" th:text="${lh.tenLoaiHang}">Tên</td>
                         <td style="color: var(--text-muted);" th:text="${lh.moTa}">Mô tả</td>
-                        <td class="center">
+                        
+                        <td th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="center">
                             <a class="btn btn-sm btn-edit" th:href="@{/loaihang/sua/{id}(id=${lh.maLoaiHang})}">Sửa</a>
                             <a class="btn btn-sm" style="background: #fce4e4; color: var(--red); padding: 6px 12px; font-size: 13px;" th:href="@{/loaihang/xoa/{id}(id=${lh.maLoaiHang})}" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">Xóa</a>
                         </td>

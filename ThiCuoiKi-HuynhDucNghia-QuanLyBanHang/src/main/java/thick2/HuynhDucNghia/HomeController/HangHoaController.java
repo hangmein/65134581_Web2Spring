@@ -36,6 +36,7 @@ public class HangHoaController {
     @GetMapping("/them")
     public String themForm(HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
+        
         model.addAttribute("hangHoa", new HangHoa());
         model.addAttribute("dsLoai", loaiHangService.getAll());
         model.addAttribute("tieuDe", "Them hang hoa");
