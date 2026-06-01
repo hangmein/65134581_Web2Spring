@@ -1,7 +1,9 @@
 package thick2.HuynhDucNghia.Service;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import thick2.HuynhDucNghia.Model.ChiTietHoaDon;
 import thick2.HuynhDucNghia.Model.HangHoa;
 import thick2.HuynhDucNghia.Model.HoaDon;
+import thick2.HuynhDucNghia.Model.NguoiDung;
 import thick2.HuynhDucNghia.Repo.ChiTietHoaDonRepository;
 import thick2.HuynhDucNghia.Repo.HangHoaRepository;
 import thick2.HuynhDucNghia.Repo.HoaDonRepository;
@@ -24,11 +27,60 @@ public class HoaDonService {
     public List<HoaDon> getAll() { return hoaDonRepo.findAll(); }
     public HoaDon getById(Integer id) { return hoaDonRepo.findById(id).orElse(null); }
 
-    public HoaDon taoHoaDon(HoaDon hd) {
+    @Transactional
+    public HoaDon lapHoaDon(NguoiDung nv, String tenKH, String sdt,
+                            List<Integer> dsMaHH, List<Integer> dsSL) {
+        if (dsMaHH == null || dsMaHH.isEmpty())
+            throw new IllegalArgumentException("Phieu phai co it nhat 1 san pham");
+
+        Map<Integer, Integer> gom = new LinkedHashMap<>();
+        for (int i = 0; i < dsMaHH.size(); i++) {
+            Integer mh = dsMaHH.get(i);
+            Integer sl = (dsSL != null && i < dsSL.size()) ? dsSL.get(i) : null;
+            if (mh == null || sl == null || sl <= 0) continue;
+            gom.merge(mh, sl, Integer::sum);
+        }
+        if (gom.isEmpty())
+            throw new IllegalArgumentException("Phieu chua co san pham hop le");
+
+        for (Map.Entry<Integer, Integer> e : gom.entrySet()) {
+            HangHoa hh = hangHoaRepo.findById(e.getKey())
+                    .orElseThrow(() -> new IllegalArgumentException("Khong tim thay hang hoa"));
+            if (hh.getSoLuongTon() < e.getValue())
+                throw new IllegalArgumentException(
+                        "Khong du ton kho: " + hh.getTenHangHoa() + " (con " + hh.getSoLuongTon() + ")");
+        }
+
+        HoaDon hd = new HoaDon();
+        hd.setNguoiDung(nv);
+        hd.setTenKhachHang(tenKH);
+        hd.setSoDienThoai(sdt);
         hd.setTongTien(BigDecimal.ZERO);
-        return hoaDonRepo.save(hd);
+        hoaDonRepo.save(hd);
+
+        BigDecimal tong = BigDecimal.ZERO;
+        for (Map.Entry<Integer, Integer> e : gom.entrySet()) {
+            HangHoa hh = hangHoaRepo.findById(e.getKey()).get();
+            int sl = e.getValue();
+
+            ChiTietHoaDon ct = new ChiTietHoaDon();
+            ct.setHoaDon(hd);
+            ct.setHangHoa(hh);
+            ct.setSoLuong(sl);
+            ct.setDonGia(hh.getDonGia());
+            chiTietRepo.save(ct);
+
+            hh.setSoLuongTon(hh.getSoLuongTon() - sl);
+            hangHoaRepo.save(hh);
+
+            tong = tong.add(hh.getDonGia().multiply(BigDecimal.valueOf(sl)));
+        }
+        hd.setTongTien(tong);
+        hoaDonRepo.save(hd);
+        return hd;
     }
 
+    @Transactional
     public void xoaHoaDon(Integer id) {
         HoaDon hd = getById(id);
         if (hd == null) return;
@@ -38,50 +90,5 @@ public class HoaDonService {
             hangHoaRepo.save(hh);
         }
         hoaDonRepo.deleteById(id);
-    }
-
-    @Transactional
-    public String themDong(Integer maHoaDon, Integer maHangHoa, int soLuong) {
-        HoaDon hd = getById(maHoaDon);
-        HangHoa hh = hangHoaRepo.findById(maHangHoa).orElse(null);
-        if (hd == null || hh == null) return "Khong tim thay hoa don hoac hang hoa";
-        if (soLuong <= 0) return "So luong phai lon hon 0";
-        if (hh.getSoLuongTon() < soLuong) return "Khong du hang trong kho (con " + hh.getSoLuongTon() + ")";
-
-        ChiTietHoaDon ct = new ChiTietHoaDon();
-        ct.setHoaDon(hd);
-        ct.setHangHoa(hh);
-        ct.setSoLuong(soLuong);
-        ct.setDonGia(hh.getDonGia());
-        chiTietRepo.save(ct);
-        hd.getChiTiet().add(ct);  
-
-        hh.setSoLuongTon(hh.getSoLuongTon() - soLuong);
-        hangHoaRepo.save(hh);
-        capNhatTongTien(hd);
-        return null; 
-    }
-
-    @Transactional
-    public void xoaDong(Integer maChiTiet) {
-        ChiTietHoaDon ct = chiTietRepo.findById(maChiTiet).orElse(null);
-        if (ct == null) return;
-        HangHoa hh = ct.getHangHoa();
-        hh.setSoLuongTon(hh.getSoLuongTon() + ct.getSoLuong());
-        hangHoaRepo.save(hh);
-
-        HoaDon hd = ct.getHoaDon();
-        chiTietRepo.delete(ct);
-        hd.getChiTiet().removeIf(c -> c.getMaChiTiet().equals(maChiTiet));
-        capNhatTongTien(hd);
-    }
-
-    private void capNhatTongTien(HoaDon hd) {
-        BigDecimal tong = BigDecimal.ZERO;
-        for (ChiTietHoaDon c : hd.getChiTiet()) {
-            tong = tong.add(c.getThanhTien());
-        }
-        hd.setTongTien(tong);
-        hoaDonRepo.save(hd);
     }
 }
