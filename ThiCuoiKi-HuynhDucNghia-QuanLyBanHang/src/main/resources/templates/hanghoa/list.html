@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hang hoa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="wrap">
+    <header class="topbar">
+        <div class="brand"><span class="logo">⚡</span><h1>Hang hoa</h1></div>
+        <a class="btn btn-primary" th:href="@{/hanghoa/them}">+ Them hang hoa</a>
+    </header>
+    <nav class="menu">
+        <a th:href="@{/}">Trang chu</a>
+        <a th:href="@{/loaihang}">Loai hang</a>
+        <a class="active" th:href="@{/hanghoa}">Hang hoa</a>
+        <a th:href="@{/hoadon}">Hoa don</a>
+    </nav>
+
+    <form class="search" method="get" th:action="@{/hanghoa}">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tim theo ten...">
+        <button class="btn btn-dark" type="submit">Tim</button>
+        <a class="btn btn-ghost" th:href="@{/hanghoa}">Xoa loc</a>
+    </form>
+
+    <div class="table-card">
+        <table>
+            <thead>
+            <tr><th>ID</th><th>Ten hang</th><th>Loai</th><th class="right">Don gia</th>
+                <th class="right">Ton</th><th class="center">Thao tac</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${danhSach.isEmpty()}"><td colspan="6" class="empty">Chua co hang hoa.</td></tr>
+            <tr th:each="hh : ${danhSach}">
+                <td th:text="${hh.maHangHoa}">1</td>
+                <td class="bold" th:text="${hh.tenHangHoa}">Ten</td>
+                <td th:text="${hh.loaiHang != null ? hh.loaiHang.tenLoaiHang : ''}">Loai</td>
+                <td class="right" th:text="${#numbers.formatDecimal(hh.donGia, 0, 'COMMA', 0, 'POINT')} + ' d'">0</td>
+                <td class="right" th:text="${hh.soLuongTon}">0</td>
+                <td class="center actions">
+                    <a class="btn btn-sm btn-edit" th:href="@{/hanghoa/sua/{id}(id=${hh.maHangHoa})}">Sua</a>
+                    <a class="btn btn-sm btn-del" th:href="@{/hanghoa/xoa/{id}(id=${hh.maHangHoa})}"
+                       onclick="return confirm('Xoa hang hoa nay?');">Xoa</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
