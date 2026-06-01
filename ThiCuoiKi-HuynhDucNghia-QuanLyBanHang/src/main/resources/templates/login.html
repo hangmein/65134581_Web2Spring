@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dang nhap</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="login-logo">⚡</div>
+        <h1>ElectroStore</h1>
+        <p class="sub">Quan ly ban hang do dien tu</p>
+
+        <p class="err-box" th:if="${loi}" th:text="${loi}"></p>
+
+        <form method="post" th:action="@{/login}">
+            <div class="field">
+                <label>Ten dang nhap</label>
+                <input type="text" name="tenDangNhap" required autofocus placeholder="admin">
+            </div>
+            <div class="field">
+                <label>Mat khau</label>
+                <input type="password" name="matKhau" required placeholder="••••••">
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Dang nhap</button>
+        </form>
+        <p class="hint">Tai khoan mau: admin / admin123</p>
+    </div>
+</div>
+</body>
+</html>

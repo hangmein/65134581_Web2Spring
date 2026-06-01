@@ -1,10 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoa don</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div class="wrap">
+    <header class="topbar">
+        <div class="brand"><span class="logo">⚡</span><h1>Hoa don</h1></div>
+        <a class="btn btn-primary" th:href="@{/hoadon/them}">+ Lap hoa don</a>
+    </header>
+    <nav class="menu">
+        <a th:href="@{/}">Trang chu</a>
+        <a th:href="@{/loaihang}">Loai hang</a>
+        <a th:href="@{/hanghoa}">Hang hoa</a>
+        <a class="active" th:href="@{/hoadon}">Hoa don</a>
+    </nav>
 
+    <div class="table-card">
+        <table>
+            <thead>
+            <tr><th>ID</th><th>Ngay lap</th><th>Khach hang</th><th>Nhan vien</th>
+                <th class="right">Tong tien</th><th class="center">Thao tac</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${danhSach.isEmpty()}"><td colspan="6" class="empty">Chua co hoa don.</td></tr>
+            <tr th:each="hd : ${danhSach}">
+                <td th:text="${hd.maHoaDon}">1</td>
+                <td th:text="${#temporals.format(hd.ngayLap, 'dd/MM/yyyy HH:mm')}">--</td>
+                <td class="bold" th:text="${hd.tenKhachHang}">KH</td>
+                <td class="muted" th:text="${hd.nguoiDung != null ? hd.nguoiDung.hoTen : ''}">NV</td>
+                <td class="right" th:text="${#numbers.formatDecimal(hd.tongTien, 0, 'COMMA', 0, 'POINT')} + ' d'">0</td>
+                <td class="center actions">
+                    <a class="btn btn-sm btn-edit" th:href="@{/hoadon/{id}(id=${hd.maHoaDon})}">Xem</a>
+                    <a class="btn btn-sm btn-del" th:href="@{/hoadon/xoa/{id}(id=${hd.maHoaDon})}"
+                       onclick="return confirm('Xoa hoa don nay? (so luong se duoc hoan lai kho)');">Xoa</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

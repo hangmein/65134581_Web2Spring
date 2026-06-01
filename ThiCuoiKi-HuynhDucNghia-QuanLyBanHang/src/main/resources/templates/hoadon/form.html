@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lap hoa don</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="wrap narrow">
+    <header class="topbar">
+        <div class="brand"><span class="logo">⚡</span><h1>Lap hoa don</h1></div>
+        <a class="btn btn-ghost" th:href="@{/hoadon}">&larr; Quay lai</a>
+    </header>
+
+    <div class="form-card">
+        <p class="muted" style="margin-bottom:16px">Nhap thong tin khach hang, sau khi luu se chuyen sang trang them san pham.</p>
+        <form method="post" th:action="@{/hoadon/luu}" th:object="${hoaDon}">
+            <div class="field">
+                <label>Ten khach hang</label>
+                <input type="text" th:field="*{tenKhachHang}" placeholder="VD: Le Van C">
+            </div>
+            <div class="field">
+                <label>So dien thoai</label>
+                <input type="text" th:field="*{soDienThoai}" placeholder="09xxxxxxxx">
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Tao hoa don</button>
+                <a class="btn btn-ghost" th:href="@{/hoadon}">Huy</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

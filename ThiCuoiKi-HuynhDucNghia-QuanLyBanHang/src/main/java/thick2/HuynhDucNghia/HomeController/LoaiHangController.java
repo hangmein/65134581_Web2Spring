@@ -16,17 +16,19 @@ import thick2.HuynhDucNghia.Service.LoaiHangService;
 public class LoaiHangController {
 
     @Autowired private LoaiHangService service;
-    // private boolean chuaDangNhap(HttpSession s) { return s.getAttribute("user") == null; }
+
+    private boolean chuaDangNhap(HttpSession s) { return s.getAttribute("user") == null; }
 
     @GetMapping
     public String list(HttpSession session, Model model) {
-        // Tắt chốt: if (chuaDangNhap(session)) return "redirect:/login";
+        if (chuaDangNhap(session)) return "redirect:/login";
         model.addAttribute("danhSach", service.getAll());
         return "loaihang/list";
     }
 
     @GetMapping("/them")
     public String themForm(HttpSession session, Model model) {
+        if (chuaDangNhap(session)) return "redirect:/login";
         model.addAttribute("loaiHang", new LoaiHang());
         model.addAttribute("tieuDe", "Them loai hang");
         return "loaihang/form";
@@ -34,6 +36,7 @@ public class LoaiHangController {
 
     @GetMapping("/sua/{id}")
     public String suaForm(@PathVariable Integer id, HttpSession session, Model model) {
+        if (chuaDangNhap(session)) return "redirect:/login";
         LoaiHang lh = service.getById(id);
         if (lh == null) return "redirect:/loaihang";
         model.addAttribute("loaiHang", lh);

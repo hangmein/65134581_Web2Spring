@@ -19,9 +19,12 @@ public class HangHoaController {
     @Autowired private HangHoaService service;
     @Autowired private LoaiHangService loaiHangService;
 
+    private boolean chuaDangNhap(HttpSession s) { return s.getAttribute("user") == null; }
+
     @GetMapping
     public String list(@RequestParam(required = false) String keyword,
                        HttpSession session, Model model) {
+        if (chuaDangNhap(session)) return "redirect:/login";
         model.addAttribute("danhSach", service.search(keyword));
         model.addAttribute("keyword", keyword);
         return "hanghoa/list";
@@ -29,6 +32,7 @@ public class HangHoaController {
 
     @GetMapping("/them")
     public String themForm(HttpSession session, Model model) {
+        if (chuaDangNhap(session)) return "redirect:/login";
         model.addAttribute("hangHoa", new HangHoa());
         model.addAttribute("dsLoai", loaiHangService.getAll());
         model.addAttribute("tieuDe", "Them hang hoa");
@@ -37,6 +41,7 @@ public class HangHoaController {
 
     @GetMapping("/sua/{id}")
     public String suaForm(@PathVariable Integer id, HttpSession session, Model model) {
+        if (chuaDangNhap(session)) return "redirect:/login";
         HangHoa hh = service.getById(id);
         if (hh == null) return "redirect:/hanghoa";
         model.addAttribute("hangHoa", hh);
@@ -44,6 +49,7 @@ public class HangHoaController {
         model.addAttribute("tieuDe", "Sua hang hoa");
         return "hanghoa/form";
     }
+
     @PostMapping("/luu")
     public String luu(@Valid @ModelAttribute("hangHoa") HangHoa hangHoa,
                       BindingResult result, Model model) {
@@ -55,6 +61,7 @@ public class HangHoaController {
         service.save(hangHoa);
         return "redirect:/hanghoa";
     }
+
     @GetMapping("/xoa/{id}")
     public String xoa(@PathVariable Integer id) {
         service.delete(id);

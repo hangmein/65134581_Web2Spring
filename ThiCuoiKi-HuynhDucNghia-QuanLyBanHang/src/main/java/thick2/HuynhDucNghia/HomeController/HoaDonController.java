@@ -27,7 +27,6 @@ public class HoaDonController {
         model.addAttribute("danhSach", hoaDonService.getAll());
         return "hoadon/list";
     }
-
     @GetMapping("/them")
     public String themForm(HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
@@ -63,12 +62,12 @@ public class HoaDonController {
         if (loi != null) ra.addFlashAttribute("loi", loi);
         return "redirect:/hoadon/" + id;
     }
-
     @GetMapping("/{id}/xoadong/{maChiTiet}")
     public String xoaDong(@PathVariable Integer id, @PathVariable Integer maChiTiet) {
         hoaDonService.xoaDong(maChiTiet);
         return "redirect:/hoadon/" + id;
     }
+
     @GetMapping("/xoa/{id}")
     public String xoa(@PathVariable Integer id) {
         hoaDonService.xoaHoaDon(id);
