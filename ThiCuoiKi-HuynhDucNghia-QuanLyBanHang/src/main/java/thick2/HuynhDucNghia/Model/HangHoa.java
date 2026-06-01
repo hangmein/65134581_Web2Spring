@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "HangHoa")
 public class HangHoa {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MaHangHoa")
@@ -33,7 +32,7 @@ public class HangHoa {
     @Min(value = 0, message = "So luong phai >= 0")
     @Column(name = "SoLuongTon", nullable = false)
     private Integer soLuongTon = 0;
-
+    
     @Column(name = "MoTa", length = 300)
     private String moTa;
 
