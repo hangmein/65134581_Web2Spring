@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import thick2.HuynhDucNghia.Model.HangHoa;
 import thick2.HuynhDucNghia.Repo.HangHoaRepository;
 
+@Service
 public class HangHoaService {
 	 @Autowired
 	 private HangHoaRepository repo;
