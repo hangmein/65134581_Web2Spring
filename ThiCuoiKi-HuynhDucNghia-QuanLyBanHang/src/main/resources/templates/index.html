@@ -3,104 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>ElectroStore Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <style>
-        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px; }
-        .dash-row { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; margin-bottom: 18px; }
-        .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-        .panel h3 { font-size: 14px; padding: 14px 16px; border-bottom: 1px solid var(--line); color: var(--text); }
-        .panel .pad { padding: 4px 0; }
-        .badge-warn { background: rgba(255,90,90,.15); color: var(--red); padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-        @media (max-width: 820px) { .grid-5 { grid-template-columns: repeat(2, 1fr); } .dash-row { grid-template-columns: 1fr; } }
-    </style>
 </head>
 <body>
-<div class="wrap">
-    <header class="topbar">
+
+<div class="app-container">
+
+    <aside class="sidebar">
         <div class="brand">
             <span class="logo">⚡</span>
-            <div><h1>Dashboard</h1><p>Tong quan he thong</p></div>
+            <div>
+                <h1>ElectroStore</h1>
+                <p>Hệ thống Quản trị</p>
+            </div>
         </div>
-        <div class="user-box">
-            <span th:if="${session.user != null}" th:text="'Xin chao, ' + ${session.user.hoTen} + ' (' + ${session.user.vaiTro} + ')'">User</span>
-            <a class="btn btn-ghost" th:href="@{/logout}">Dang xuat</a>
+
+        <nav class="sidebar-menu">
+            <a class="active" th:href="@{/}">📊 Bảng điều khiển</a>
+            <a th:href="@{/loaihang}">🏷️ Quản lý Loại hàng</a>
+            <a th:href="@{/hanghoa}">📦 Quản lý Hàng hóa</a>
+            <a th:href="@{/hoadon}">🧾 Quản lý Hóa đơn</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        
+        <header class="topbar">
+            <h2 class="page-title">Tổng quan Hệ thống</h2>
+            <div class="user-box">
+                <span th:if="${session.user != null}" th:text="'👋 Xin chào, ' + ${session.user.hoTen}">User</span>
+                <a class="btn btn-ghost" th:href="@{/logout}">Đăng xuất</a>
+            </div>
+        </header>
+
+        <section class="grid-5">
+            <div class="stat-card"><span class="stat-label">Loại hàng</span><span class="stat-value" th:text="${soLoaiHang}">0</span></div>
+            <div class="stat-card"><span class="stat-label">Hàng hóa</span><span class="stat-value" th:text="${soHangHoa}">0</span></div>
+            <div class="stat-card"><span class="stat-label">Hóa đơn</span><span class="stat-value" th:text="${soHoaDon}">0</span></div>
+            <div class="stat-card accent"><span class="stat-label">Doanh thu</span><span class="stat-value" th:text="${#numbers.formatDecimal(doanhThu,0,'COMMA',0,'POINT')} + ' đ'">0</span></div>
+            <div class="stat-card"><span class="stat-label">Giá trị tồn kho</span><span class="stat-value" th:text="${#numbers.formatDecimal(giaTriTon,0,'COMMA',0,'POINT')} + ' đ'">0</span></div>
+        </section>
+
+        <div class="quick-links">
+            <a class="ql-card" th:href="@{/hanghoa/them}">+ Thêm Hàng Hóa Mới</a>
+            <a class="ql-card" th:href="@{/hoadon/them}">✍️ Lập Hóa Đơn Mới</a>
+            <a class="ql-card" th:href="@{/loaihang/them}">+ Thêm Loại Hàng</a>
         </div>
-    </header>
 
-    <nav class="menu">
-        <a class="active" th:href="@{/}">Trang chu</a>
-        <a th:href="@{/loaihang}">Loai hang</a>
-        <a th:href="@{/hanghoa}">Hang hoa</a>
-        <a th:href="@{/hoadon}">Hoa don</a>
-    </nav>
+        <div class="dash-row">
+            <div class="panel">
+                <h3>📊 Thống kê theo Loại hàng</h3>
+                <table>
+                    <thead><tr><th>Loại hàng</th><th class="right">Số SP</th><th class="right">Tổng tồn</th><th class="right">Giá trị tồn</th></tr></thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(thongKeLoai)}"><td colspan="4" class="empty">Chưa có dữ liệu thống kê.</td></tr>
+                    <tr th:each="tk : ${thongKeLoai}">
+                        <td class="bold" th:text="${tk.tenLoai}">Loại</td>
+                        <td class="right" th:text="${tk.soSanPham}">0</td>
+                        <td class="right" th:text="${tk.tongTon}">0</td>
+                        <td class="right" style="color: var(--accent); font-weight: 600;" th:text="${#numbers.formatDecimal(tk.giaTriTon,0,'COMMA',0,'POINT')} + ' đ'">0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-    <!-- 5 the thong ke tong quan -->
-    <section class="grid-5">
-        <div class="stat-card"><span class="stat-label">Loai hang</span><span class="stat-value" th:text="${soLoaiHang}">0</span></div>
-        <div class="stat-card"><span class="stat-label">Hang hoa</span><span class="stat-value" th:text="${soHangHoa}">0</span></div>
-        <div class="stat-card"><span class="stat-label">Hoa don</span><span class="stat-value" th:text="${soHoaDon}">0</span></div>
-        <div class="stat-card accent"><span class="stat-label">Doanh thu</span><span class="stat-value" th:text="${#numbers.formatDecimal(doanhThu,0,'COMMA',0,'POINT')} + ' d'">0</span></div>
-        <div class="stat-card"><span class="stat-label">Gia tri ton kho</span><span class="stat-value" th:text="${#numbers.formatDecimal(giaTriTon,0,'COMMA',0,'POINT')} + ' d'">0</span></div>
-    </section>
+            <div class="panel">
+                <h3>⚠️ Hàng sắp hết (Tồn &lt;= 5)</h3>
+                <table>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(hangSapHet)}"><td class="empty">Tất cả hàng hóa đều dồi dào.</td></tr>
+                    <tr th:each="h : ${hangSapHet}">
+                        <td class="bold" th:text="${h.tenHangHoa}">SP</td>
+                        <td class="right"><span class="badge-warn" th:text="'Còn ' + ${h.soLuongTon}">Còn 0</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <!-- Thong ke theo loai hang + Hang sap het -->
-    <div class="dash-row">
-        <div class="panel">
-            <h3>Thong ke theo loai hang</h3>
+        <div class="panel" style="margin-bottom:30px">
+            <h3>🧾 Giao dịch gần đây</h3>
             <table>
-                <thead><tr><th>Loai hang</th><th class="right">So SP</th><th class="right">Tong ton</th><th class="right">Gia tri ton</th></tr></thead>
+                <thead><tr><th>Mã HĐ</th><th>Ngày lập</th><th>Khách hàng</th><th class="right">Tổng tiền</th><th class="center">Thao tác</th></tr></thead>
                 <tbody>
-                <tr th:if="${thongKeLoai.isEmpty()}"><td colspan="4" class="empty">Chua co du lieu.</td></tr>
-                <tr th:each="tk : ${thongKeLoai}">
-                    <td class="bold" th:text="${tk.tenLoai}">Loai</td>
-                    <td class="right" th:text="${tk.soSanPham}">0</td>
-                    <td class="right" th:text="${tk.tongTon}">0</td>
-                    <td class="right" th:text="${#numbers.formatDecimal(tk.giaTriTon,0,'COMMA',0,'POINT')}">0</td>
+                <tr th:if="${#lists.isEmpty(hoaDonGanNhat)}"><td colspan="5" class="empty">Chưa có giao dịch nào được thực hiện.</td></tr>
+                <tr th:each="hd : ${hoaDonGanNhat}">
+                    <td style="font-weight: 600;" th:text="'HD' + ${hd.maHoaDon}">1</td>
+                    <td th:text="${#temporals.format(hd.ngayLap, 'dd/MM/yyyy HH:mm')}">--</td>
+                    <td class="bold" th:text="${hd.tenKhachHang}">KH</td>
+                    <td class="right" style="color: var(--red); font-weight: bold;" th:text="${#numbers.formatDecimal(hd.tongTien,0,'COMMA',0,'POINT')} + ' đ'">0</td>
+                    <td class="center"><a class="btn btn-sm btn-edit" th:href="@{/hoadon/{id}(id=${hd.maHoaDon})}">Xem chi tiết</a></td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="panel">
-            <h3>Hang sap het (ton &lt;= 5)</h3>
-            <table>
-                <tbody>
-                <tr th:if="${hangSapHet.isEmpty()}"><td class="empty">Khong co hang sap het.</td></tr>
-                <tr th:each="h : ${hangSapHet}">
-                    <td class="bold" th:text="${h.tenHangHoa}">SP</td>
-                    <td class="right"><span class="badge-warn" th:text="'Con ' + ${h.soLuongTon}">Con 0</span></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <footer class="foot">Huỳnh Đức Nghĩa &mdash; Đồ án Spring Boot + SQL Server</footer>
+    </main>
 
-    <!-- Hoa don gan nhat -->
-    <div class="panel" style="margin-bottom:18px">
-        <h3>Hoa don gan nhat</h3>
-        <table>
-            <thead><tr><th>ID</th><th>Ngay lap</th><th>Khach hang</th><th class="right">Tong tien</th><th class="center">Xem</th></tr></thead>
-            <tbody>
-            <tr th:if="${hoaDonGanNhat.isEmpty()}"><td colspan="5" class="empty">Chua co hoa don.</td></tr>
-            <tr th:each="hd : ${hoaDonGanNhat}">
-                <td th:text="${hd.maHoaDon}">1</td>
-                <td th:text="${#temporals.format(hd.ngayLap, 'dd/MM/yyyy HH:mm')}">--</td>
-                <td class="bold" th:text="${hd.tenKhachHang}">KH</td>
-                <td class="right" th:text="${#numbers.formatDecimal(hd.tongTien,0,'COMMA',0,'POINT')} + ' d'">0</td>
-                <td class="center"><a class="btn btn-sm btn-edit" th:href="@{/hoadon/{id}(id=${hd.maHoaDon})}">Xem</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="quick-links">
-        <a class="ql-card" th:href="@{/hanghoa/them}">+ Them hang hoa</a>
-        <a class="ql-card" th:href="@{/hoadon/them}">+ Lap hoa don</a>
-        <a class="ql-card" th:href="@{/loaihang/them}">+ Them loai hang</a>
-    </div>
-
-    <footer class="foot">Huynh Duc Nghia &mdash; Spring Boot + SQL Server</footer>
 </div>
 </body>
 </html>

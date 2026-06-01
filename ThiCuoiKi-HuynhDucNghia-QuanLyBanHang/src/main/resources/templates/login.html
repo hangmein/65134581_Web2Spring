@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dang nhap</title>
+    <title>Đăng nhập - ElectroStore</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,22 +11,23 @@
     <div class="login-card">
         <div class="login-logo">⚡</div>
         <h1>ElectroStore</h1>
-        <p class="sub">Quan ly ban hang do dien tu</p>
+        <p class="sub">Hệ thống Quản trị Bán hàng</p>
 
         <p class="err-box" th:if="${loi}" th:text="${loi}"></p>
 
         <form method="post" th:action="@{/login}">
             <div class="field">
-                <label>Ten dang nhap</label>
-                <input type="text" name="tenDangNhap" required autofocus placeholder="admin">
+                <label>Tên đăng nhập</label>
+                <input type="text" name="tenDangNhap" required autofocus placeholder="Ví dụ: admin">
             </div>
             <div class="field">
-                <label>Mat khau</label>
+                <label>Mật khẩu</label>
                 <input type="password" name="matKhau" required placeholder="••••••">
             </div>
-            <button class="btn btn-primary btn-block" type="submit">Dang nhap</button>
+            <button class="btn btn-block" type="submit">Đăng nhập ngay</button>
         </form>
-        <p class="hint">Tai khoan mau: admin / admin123</p>
+        
+        <p class="hint">💡 Tài khoản mẫu: admin / 1</p>
     </div>
 </div>
 </body>

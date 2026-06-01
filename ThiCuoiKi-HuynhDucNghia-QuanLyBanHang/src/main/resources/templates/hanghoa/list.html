@@ -3,57 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hang hoa</title>
+    <title>Quản lý Hàng hóa - ElectroStore</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div class="wrap">
-    <header class="topbar">
-        <div class="brand"><span class="logo">⚡</span><h1>Hang hoa</h1></div>
-        <a class="btn btn-primary" th:href="@{/hanghoa/them}">+ Them hang hoa</a>
-    </header>
-    <nav class="menu">
-        <a th:href="@{/}">Trang chu</a>
-        <a th:href="@{/loaihang}">Loai hang</a>
-        <a class="active" th:href="@{/hanghoa}">Hang hoa</a>
-        <a th:href="@{/hoadon}">Hoa don</a>
-    </nav>
+<div class="app-container">
 
-    <form class="search" method="get" th:action="@{/hanghoa}">
-        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tim theo ten...">
-        <select name="maLoaiHang" style="background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:14px">
-            <option value="">-- Tat ca loai --</option>
-            <option th:each="l : ${dsLoai}" th:value="${l.maLoaiHang}"
-                    th:text="${l.tenLoaiHang}"
-                    th:selected="${maLoaiHangLoc != null and maLoaiHangLoc == l.maLoaiHang}"></option>
-        </select>
-        <button class="btn btn-dark" type="submit">Loc</button>
-        <a class="btn btn-ghost" th:href="@{/hanghoa}">Xoa loc</a>
-    </form>
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="logo">⚡</span>
+            <div>
+                <h1>ElectroStore</h1>
+                <p>Hệ thống Quản trị</p>
+            </div>
+        </div>
+        <nav class="sidebar-menu">
+            <a th:href="@{/}">📊 Bảng điều khiển</a>
+            <a th:href="@{/loaihang}">🏷️ Quản lý Loại hàng</a>
+            <a class="active" th:href="@{/hanghoa}">📦 Quản lý Hàng hóa</a>
+            <a th:href="@{/hoadon}">🧾 Quản lý Hóa đơn</a>
+        </nav>
+    </aside>
 
-    <div class="table-card">
-        <table>
-            <thead>
-            <tr><th>ID</th><th>Ten hang</th><th>Loai</th><th class="right">Don gia</th>
-                <th class="right">Ton</th><th class="center">Thao tac</th></tr>
-            </thead>
-            <tbody>
-            <tr th:if="${danhSach.isEmpty()}"><td colspan="6" class="empty">Khong co hang hoa phu hop.</td></tr>
-            <tr th:each="hh : ${danhSach}">
-                <td th:text="${hh.maHangHoa}">1</td>
-                <td class="bold" th:text="${hh.tenHangHoa}">Ten</td>
-                <td th:text="${hh.loaiHang != null ? hh.loaiHang.tenLoaiHang : ''}">Loai</td>
-                <td class="right" th:text="${#numbers.formatDecimal(hh.donGia, 0, 'COMMA', 0, 'POINT')} + ' d'">0</td>
-                <td class="right" th:text="${hh.soLuongTon}">0</td>
-                <td class="center actions">
-                    <a class="btn btn-sm btn-edit" th:href="@{/hanghoa/sua/{id}(id=${hh.maHangHoa})}">Sua</a>
-                    <a class="btn btn-sm btn-del" th:href="@{/hanghoa/xoa/{id}(id=${hh.maHangHoa})}"
-                       onclick="return confirm('Xoa hang hoa nay?');">Xoa</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <main class="main-content">
+        
+        <header class="topbar">
+            <h2 class="page-title">Danh sách Hàng hóa</h2>
+            <div class="user-box">
+                <span th:if="${session.user != null}" th:text="'👋 Xin chào, ' + ${session.user.hoTen}">User</span>
+                <a class="btn btn-ghost" th:href="@{/logout}">Đăng xuất</a>
+            </div>
+        </header>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <form method="get" th:action="@{/hanghoa}" style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" name="keyword" th:value="${keyword}" placeholder="🔍 Tìm theo tên..." style="padding: 10px 15px; border: 1px solid var(--line); border-radius: 8px; width: 250px; outline: none;">
+                
+                <select name="maLoaiHang" style="padding: 10px 15px; border: 1px solid var(--line); border-radius: 8px; outline: none; background: #fff;">
+                    <option value="">-- Tất cả loại hàng --</option>
+                    <option th:each="l : ${dsLoai}" th:value="${l.maLoaiHang}"
+                            th:text="${l.tenLoaiHang}"
+                            th:selected="${maLoaiHangLoc != null and maLoaiHangLoc == l.maLoaiHang}"></option>
+                </select>
+                
+                <button class="btn" style="background: var(--text-main); color: white;" type="submit">Lọc</button>
+                <a class="btn btn-ghost" th:href="@{/hanghoa}">Xóa lọc</a>
+            </form>
+
+            <a class="btn" style="background: var(--primary); color: white;" th:href="@{/hanghoa/them}">+ Thêm hàng hóa mới</a>
+        </div>
+
+        <div class="panel">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Loại hàng</th>
+                        <th class="right">Đơn giá</th>
+                        <th class="right">Tồn kho</th>
+                        <th class="center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(danhSach)}">
+                        <td colspan="6" class="empty">Không tìm thấy hàng hóa nào phù hợp.</td>
+                    </tr>
+                    <tr th:each="hh : ${danhSach}">
+                        <td th:text="${hh.maHangHoa}">1</td>
+                        <td class="bold" th:text="${hh.tenHangHoa}">Tên</td>
+                        <td th:text="${hh.loaiHang != null ? hh.loaiHang.tenLoaiHang : 'Chưa phân loại'}">Loại</td>
+                        <td class="right" style="color: var(--primary); font-weight: 600;" th:text="${#numbers.formatDecimal(hh.donGia, 0, 'COMMA', 0, 'POINT')} + ' đ'">0</td>
+                        <td class="right">
+                            <span th:if="${hh.soLuongTon > 5}" th:text="${hh.soLuongTon}"></span>
+                            <span th:if="${hh.soLuongTon <= 5}" class="badge-warn" th:text="${hh.soLuongTon} + ' (Sắp hết)'"></span>
+                        </td>
+                        <td class="center">
+                            <a class="btn btn-sm btn-edit" th:href="@{/hanghoa/sua/{id}(id=${hh.maHangHoa})}">Sửa</a>
+                            <a class="btn btn-sm" style="background: #fce4e4; color: var(--red); padding: 6px 12px; font-size: 13px;" th:href="@{/hanghoa/xoa/{id}(id=${hh.maHangHoa})}" onclick="return confirm('Bạn có chắc chắn muốn xóa mặt hàng này?');">Xóa</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="foot">Huỳnh Đức Nghĩa &mdash; Đồ án Spring Boot + SQL Server</footer>
+    </main>
 </div>
 </body>
 </html>
