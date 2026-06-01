@@ -5,17 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import thick2.HuynhDucNghia.Model.LoaiHang;
-import thick2.HuynhDucNghia.Service.LoaiHangService;
+import thick2.HuynhDucNghia.Model.NguoiDung;
+import thick2.HuynhDucNghia.Service.NguoiDungService;
 
 @Controller
-@RequestMapping("/loaihang")
-public class LoaiHangController {
+@RequestMapping("/nhanvien")
+public class NguoiDungController {
 
-    @Autowired private LoaiHangService service;
+    @Autowired private NguoiDungService service;
 
     private boolean chuaDangNhap(HttpSession s) { return s.getAttribute("user") == null; }
 
@@ -23,46 +22,43 @@ public class LoaiHangController {
     public String list(@RequestParam(value = "keyword", required = false) String keyword,
                        HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
-        
         model.addAttribute("danhSach", service.search(keyword));
-        
         model.addAttribute("keyword", keyword);
-        
-        return "loaihang/list";
+        return "nguoidung/list";
     }
 
     @GetMapping("/them")
     public String themForm(HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
-        model.addAttribute("loaiHang", new LoaiHang());
-        model.addAttribute("tieuDe", "Thêm loại hàng mới");
-        return "loaihang/form";
+        model.addAttribute("nhanVien", new NguoiDung());
+        model.addAttribute("tieuDe", "Thêm nhân viên mới");
+        return "nguoidung/form";
     }
 
     @GetMapping("/sua/{id}")
     public String suaForm(@PathVariable Integer id, HttpSession session, Model model) {
         if (chuaDangNhap(session)) return "redirect:/login";
-        LoaiHang lh = service.getById(id);
-        if (lh == null) return "redirect:/loaihang";
-        model.addAttribute("loaiHang", lh);
-        model.addAttribute("tieuDe", "Sửa thông tin loại hàng");
-        return "loaihang/form";
+        NguoiDung nd = service.getById(id);
+        if (nd == null) return "redirect:/nhanvien";
+        model.addAttribute("nhanVien", nd);
+        model.addAttribute("tieuDe", "Sửa thông tin nhân viên");
+        return "nguoidung/form";
     }
 
     @PostMapping("/luu")
-    public String luu(@Valid @ModelAttribute("loaiHang") LoaiHang loaiHang,
+    public String luu(@Valid @ModelAttribute("nhanVien") NguoiDung nd,
                       BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("tieuDe", loaiHang.getMaLoaiHang() == null ? "Thêm loại hàng mới" : "Sửa thông tin loại hàng");
-            return "loaihang/form";
+            model.addAttribute("tieuDe", nd.getMaNguoiDung() == null ? "Thêm nhân viên mới" : "Sửa thông tin nhân viên");
+            return "nguoidung/form";
         }
-        service.save(loaiHang);
-        return "redirect:/loaihang";
+        service.save(nd);
+        return "redirect:/nhanvien";
     }
 
     @GetMapping("/xoa/{id}")
     public String xoa(@PathVariable Integer id) {
         service.delete(id);
-        return "redirect:/loaihang";
+        return "redirect:/nhanvien";
     }
 }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Nhân viên - ElectroStore</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-container">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="logo">⚡</span>
+            <div><h1>ElectroStore</h1><p>Hệ thống Quản trị</p></div>
+        </div>
+        <nav class="sidebar-menu">
+            <a th:href="@{/}">📊 Bảng điều khiển</a>
+            <a th:href="@{/loaihang}">🏷️ Quản lý Loại hàng</a>
+            <a th:href="@{/hanghoa}">📦 Quản lý Hàng hóa</a>
+            <a th:href="@{/hoadon}">🧾 Quản lý Hóa đơn</a>
+            <a class="active" th:href="@{/nhanvien}">👥 Quản lý Nhân viên</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <h2 class="page-title">Danh sách Nhân viên hệ thống</h2>
+            <div class="user-box">
+                <span th:if="${session.user != null}" th:text="'👋 Xin chào, ' + ${session.user.hoTen}">User</span>
+                <a class="btn btn-ghost" th:href="@{/logout}">Đăng xuất</a>
+            </div>
+        </header>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <form method="get" th:action="@{/nhanvien}" style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" name="keyword" th:value="${keyword}" placeholder="🔍 Tìm nhân viên..." style="padding: 10px 15px; border: 1px solid var(--line); border-radius: 8px; width: 250px; outline: none;">
+                <button class="btn" style="background: var(--text-main); color: white;" type="submit">Tìm kiếm</button>
+                <a class="btn btn-ghost" th:href="@{/nhanvien}">Xóa lọc</a>
+            </form>
+            <a class="btn" style="background: var(--primary); color: white; padding: 10px 20px;" th:href="@{/nhanvien/them}">+ Thêm Nhân viên</a>
+        </div>
+
+        <div class="panel">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã NV</th>
+                        <th>Họ và Tên</th>
+                        <th>Tên đăng nhập</th>
+                        <th>Vai trò</th>
+                        <th>Ngày tạo tài khoản</th>
+                        <th class="center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(danhSach)}">
+                        <td colspan="6" class="empty">Không tìm thấy tài khoản nhân viên nào.</td>
+                    </tr>
+                    <tr th:each="nv : ${danhSach}">
+                        <td th:text="${nv.maNguoiDung}">1</td>
+                        <td class="bold" th:text="${nv.hoTen}">Họ tên</td>
+                        <td style="color: var(--primary); font-weight: 500;" th:text="${nv.tenDangNhap}">username</td>
+                        <td>
+                            <span th:if="${nv.vaiTro == 'Admin'}" class="badge-warn" style="background:#e3f2fd; color:#1e88e5;" th:text="${nv.vaiTro}"></span>
+                            <span th:if="${nv.vaiTro != 'Admin'}" class="badge-warn" th:text="${nv.vaiTro}"></span>
+                        </td>
+                        <td style="color: var(--text-muted);" th:text="${#temporals.format(nv.ngayTao, 'dd/MM/yyyy HH:mm')}">--</td>
+                        <td class="center">
+                            <a class="btn btn-sm btn-edit" th:href="@{/nhanvien/sua/{id}(id=${nv.maNguoiDung})}">Sửa</a>
+                            <a class="btn btn-sm" style="background: #fce4e4; color: var(--red); padding: 6px 12px; font-size: 13px;" th:href="@{/nhanvien/xoa/{id}(id=${nv.maNguoiDung})}" onclick="return confirm('Xóa tài khoản nhân viên này? Người này sẽ không thể đăng nhập được nữa.');">Xóa</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <footer class="foot">Huỳnh Đức Nghĩa &mdash; Đồ án Spring Boot + SQL Server</footer>
+    </main>
+</div>
+</body>
+</html>

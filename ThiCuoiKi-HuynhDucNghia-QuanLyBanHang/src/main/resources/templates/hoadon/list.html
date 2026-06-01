@@ -3,45 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoa don</title>
+    <title>Quản lý Hóa đơn - ElectroStore</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div class="wrap">
-    <header class="topbar">
-        <div class="brand"><span class="logo">⚡</span><h1>Hoa don</h1></div>
-        <a class="btn btn-primary" th:href="@{/hoadon/them}">+ Lap hoa don</a>
-    </header>
-    <nav class="menu">
-        <a th:href="@{/}">Trang chu</a>
-        <a th:href="@{/loaihang}">Loai hang</a>
-        <a th:href="@{/hanghoa}">Hang hoa</a>
-        <a class="active" th:href="@{/hoadon}">Hoa don</a>
-    </nav>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="logo">⚡</span>
+            <div><h1>ElectroStore</h1><p>Hệ thống Quản trị</p></div>
+        </div>
+        <nav class="sidebar-menu">
+            <a th:href="@{/}">📊 Bảng điều khiển</a>
+            <a th:href="@{/loaihang}">🏷️ Quản lý Loại hàng</a>
+            <a th:href="@{/hanghoa}">📦 Quản lý Hàng hóa</a>
+            <a class="active" th:href="@{/hoadon}">🧾 Quản lý Hóa đơn</a>
+        </nav>
+    </aside>
 
-    <div class="table-card">
-        <table>
-            <thead>
-            <tr><th>ID</th><th>Ngay lap</th><th>Khach hang</th><th>Nhan vien</th>
-                <th class="right">Tong tien</th><th class="center">Thao tac</th></tr>
-            </thead>
-            <tbody>
-            <tr th:if="${danhSach.isEmpty()}"><td colspan="6" class="empty">Chua co hoa don.</td></tr>
-            <tr th:each="hd : ${danhSach}">
-                <td th:text="${hd.maHoaDon}">1</td>
-                <td th:text="${#temporals.format(hd.ngayLap, 'dd/MM/yyyy HH:mm')}">--</td>
-                <td class="bold" th:text="${hd.tenKhachHang}">KH</td>
-                <td class="muted" th:text="${hd.nguoiDung != null ? hd.nguoiDung.hoTen : ''}">NV</td>
-                <td class="right" th:text="${#numbers.formatDecimal(hd.tongTien, 0, 'COMMA', 0, 'POINT')} + ' d'">0</td>
-                <td class="center actions">
-                    <a class="btn btn-sm btn-edit" th:href="@{/hoadon/{id}(id=${hd.maHoaDon})}">Xem</a>
-                    <a class="btn btn-sm btn-del" th:href="@{/hoadon/xoa/{id}(id=${hd.maHoaDon})}"
-                       onclick="return confirm('Xoa hoa don nay? (so luong se duoc hoan lai kho)');">Xoa</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <main class="main-content">
+        <header class="topbar">
+            <h2 class="page-title">Danh sách Hóa đơn</h2>
+            <div class="user-box">
+                <span th:if="${session.user != null}" th:text="'👋 Xin chào, ' + ${session.user.hoTen}">User</span>
+                <a class="btn btn-ghost" th:href="@{/logout}">Đăng xuất</a>
+            </div>
+        </header>
+
+        <div style="margin-bottom: 25px; text-align: right;">
+            <a class="btn" style="background: var(--primary); color: white;" th:href="@{/hoadon/them}">✍️ + Lập hóa đơn mới</a>
+        </div>
+
+        <div class="panel">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã HĐ</th>
+                        <th>Ngày lập</th>
+                        <th>Khách hàng</th>
+                        <th>Nhân viên lập</th>
+                        <th class="right">Tổng tiền</th>
+                        <th class="center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(danhSach)}">
+                        <td colspan="6" class="empty">Chưa có hóa đơn nào trong hệ thống.</td>
+                    </tr>
+                    <tr th:each="hd : ${danhSach}">
+                        <td style="font-weight: bold;" th:text="'HD' + ${hd.maHoaDon}">1</td>
+                        <td th:text="${#temporals.format(hd.ngayLap, 'dd/MM/yyyy HH:mm')}">--</td>
+                        <td class="bold" th:text="${hd.tenKhachHang}">KH</td>
+                        <td style="color: var(--text-muted);" th:text="${hd.nguoiDung != null ? hd.nguoiDung.hoTen : 'Hệ thống'}">NV</td>
+                        <td class="right" style="color: var(--red); font-weight: bold;" th:text="${#numbers.formatDecimal(hd.tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0</td>
+                        <td class="center">
+                            <a class="btn btn-sm btn-edit" th:href="@{/hoadon/{id}(id=${hd.maHoaDon})}">Xem chi tiết</a>
+                            <a class="btn btn-sm" style="background: #fce4e4; color: var(--red); padding: 6px 12px; font-size: 13px;" th:href="@{/hoadon/xoa/{id}(id=${hd.maHoaDon})}" onclick="return confirm('Bạn có chắc chắn muốn xóa hóa đơn này? (Số lượng hàng sẽ được hoàn lại kho)');">Xóa</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <footer class="foot">Huỳnh Đức Nghĩa &mdash; Đồ án Spring Boot + SQL Server</footer>
+    </main>
 </div>
 </body>
 </html>

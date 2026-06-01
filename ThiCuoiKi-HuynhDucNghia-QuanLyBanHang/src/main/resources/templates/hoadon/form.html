@@ -3,93 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lap hoa don</title>
+    <title>Lập hóa đơn mới - ElectroStore</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        .picker { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 18px; }
-        .picker .field { margin: 0; flex: 1; min-width: 200px; }
-        .section-title { font-size: 15px; margin: 22px 0 12px; color: var(--text); }
+        .row { display: flex; gap: 20px; }
+        .field { flex: 1; margin-bottom: 20px; }
+        .field label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        .field input, .field select { width: 100%; padding: 10px 15px; border: 1px solid var(--line); border-radius: 8px; outline: none; font-family: inherit; }
+        .field input:focus, .field select:focus { border-color: var(--primary); }
+        .picker { display: flex; gap: 15px; align-items: flex-end; background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #ccc; }
+        .section-title { font-size: 16px; margin: 0 0 20px 0; color: var(--text-main); font-weight: 700; border-bottom: 2px solid var(--line); padding-bottom: 10px;}
     </style>
 </head>
 <body>
-<div class="wrap">
-    <header class="topbar">
-        <div class="brand"><span class="logo">⚡</span><h1>Lap hoa don</h1></div>
-        <a class="btn btn-ghost" th:href="@{/hoadon}">&larr; Quay lai</a>
-    </header>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="brand"><span class="logo">⚡</span><div><h1>ElectroStore</h1><p>Hệ thống Quản trị</p></div></div>
+        <nav class="sidebar-menu">
+            <a th:href="@{/}">📊 Bảng điều khiển</a>
+            <a th:href="@{/loaihang}">🏷️ Quản lý Loại hàng</a>
+            <a th:href="@{/hanghoa}">📦 Quản lý Hàng hóa</a>
+            <a class="active" th:href="@{/hoadon}">🧾 Quản lý Hóa đơn</a>
+        </nav>
+    </aside>
 
-    <p class="err-box" th:if="${loi}" th:text="${loi}"></p>
+    <main class="main-content">
+        <header class="topbar">
+            <h2 class="page-title">Tạo mới Hóa đơn</h2>
+            <a class="btn btn-ghost" th:href="@{/hoadon}">&larr; Quay lại danh sách</a>
+        </header>
 
-    <form method="post" th:action="@{/hoadon/luu}" id="phieuForm" onsubmit="return kiemTra()">
-        <!-- Thong tin khach hang -->
-        <div class="form-card" style="margin-bottom:18px">
-            <h3 class="section-title" style="margin-top:0">Thong tin khach hang</h3>
-            <div class="row">
-                <div class="field">
-                    <label>Ten khach hang</label>
-                    <input type="text" name="tenKhachHang" placeholder="VD: Le Van C">
-                </div>
-                <div class="field">
-                    <label>So dien thoai</label>
-                    <input type="text" name="soDienThoai" placeholder="09xxxxxxxx">
+        <p class="err-box" th:if="${loi}" th:text="${loi}" style="background: #fce4e4; color: red; padding: 15px; border-radius: 8px; margin-bottom: 20px;"></p>
+
+        <form method="post" th:action="@{/hoadon/luu}" id="phieuForm" onsubmit="return kiemTra()">
+            
+            <div class="panel" style="padding: 25px; margin-bottom: 25px;">
+                <h3 class="section-title">👤 Thông tin Khách hàng</h3>
+                <div class="row">
+                    <div class="field">
+                        <label>Tên khách hàng</label>
+                        <input type="text" name="tenKhachHang" placeholder="VD: Lê Văn A" required>
+                    </div>
+                    <div class="field">
+                        <label>Số điện thoại</label>
+                        <input type="text" name="soDienThoai" placeholder="VD: 0912345678">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Chon san pham -->
-        <div class="form-card">
-            <h3 class="section-title" style="margin-top:0">San pham</h3>
-            <div class="picker">
-                <div class="field">
-                    <label>Chon san pham</label>
-                    <select id="spSelect">
-                        <option value="">-- Chon san pham --</option>
-                        <option th:each="hh : ${dsHangHoa}" th:value="${hh.maHangHoa}"
-                                th:attr="data-gia=${hh.donGia}, data-ton=${hh.soLuongTon}, data-ten=${hh.tenHangHoa}"
-                                th:text="${hh.tenHangHoa} + ' - ' + ${#numbers.formatDecimal(hh.donGia,0,'COMMA',0,'POINT')} + ' d (ton: ' + ${hh.soLuongTon} + ')'"></option>
-                    </select>
+            <div class="panel" style="padding: 25px; margin-bottom: 25px;">
+                <h3 class="section-title">🛒 Chi tiết Giỏ hàng</h3>
+                
+                <div class="picker">
+                    <div class="field" style="margin: 0; flex: 2;">
+                        <label>Chọn sản phẩm</label>
+                        <select id="spSelect">
+                            <option value="">-- Click để chọn mặt hàng --</option>
+                            <option th:each="hh : ${dsHangHoa}" th:value="${hh.maHangHoa}"
+                                    th:attr="data-gia=${hh.donGia}, data-ton=${hh.soLuongTon}, data-ten=${hh.tenHangHoa}"
+                                    th:text="${hh.tenHangHoa} + ' - Giá: ' + ${#numbers.formatDecimal(hh.donGia,0,'COMMA',0,'POINT')} + ' đ (Tồn: ' + ${hh.soLuongTon} + ')'"></option>
+                        </select>
+                    </div>
+                    <div class="field" style="margin: 0; flex: 0.5;">
+                        <label>Số lượng</label>
+                        <input type="number" id="slInput" value="1" min="1">
+                    </div>
+                    <button type="button" class="btn" style="background: var(--text-main); color: white; height: 40px; margin-bottom: 2px;" onclick="themVaoGio()">+ Thêm vào giỏ</button>
                 </div>
-                <div class="field" style="flex:0 0 120px">
-                    <label>So luong</label>
-                    <input type="number" id="slInput" value="1" min="1">
-                </div>
-                <button type="button" class="btn btn-dark" onclick="themVaoGio()">Them vao phieu</button>
-            </div>
 
-            <div class="table-card">
-                <table>
+                <table style="margin-bottom: 20px;">
                     <thead>
-                    <tr><th>San pham</th><th class="right">Don gia</th><th class="right">SL</th>
-                        <th class="right">Thanh tien</th><th class="center">Xoa</th></tr>
+                        <tr>
+                            <th>Tên Sản phẩm</th>
+                            <th class="right">Đơn giá</th>
+                            <th class="right">Số lượng</th>
+                            <th class="right">Thành tiền</th>
+                            <th class="center">Thao tác</th>
+                        </tr>
                     </thead>
                     <tbody id="gioBody"></tbody>
                     <tfoot>
-                    <tr>
-                        <td colspan="3" class="right bold">TONG TIEN</td>
-                        <td class="right bold" style="color:var(--primary)" id="tongTien">0 d</td>
-                        <td></td>
-                    </tr>
+                        <tr>
+                            <td colspan="3" class="right bold" style="font-size: 16px;">TỔNG CỘNG:</td>
+                            <td class="right bold" style="color:var(--red); font-size: 18px;" id="tongTien">0 đ</td>
+                            <td></td>
+                        </tr>
                     </tfoot>
                 </table>
-            </div>
 
-            <!-- noi chua input an gui len server -->
-            <div id="hiddenInputs"></div>
+                <div id="hiddenInputs"></div>
 
-            <div class="form-actions" style="margin-top:18px">
-                <button class="btn btn-primary" type="submit">Xac nhan lap phieu</button>
-                <a class="btn btn-ghost" th:href="@{/hoadon}">Huy</a>
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn" type="submit" style="background: var(--accent); color: white; padding: 12px 25px; font-size: 15px;">✅ Xác nhận & Lưu Hóa đơn</button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+        <footer class="foot">Huỳnh Đức Nghĩa &mdash; Đồ án Spring Boot + SQL Server</footer>
+    </main>
 </div>
 
 <script>
     const cart = [];
-
     function themVaoGio() {
         const sel = document.getElementById('spSelect');
-        if (!sel.value) { alert('Vui long chon san pham'); return; }
+        if (!sel.value) { alert('Vui lòng chọn sản phẩm!'); return; }
         const opt = sel.options[sel.selectedIndex];
         const id  = parseInt(sel.value);
         const ten = opt.getAttribute('data-ten');
@@ -97,9 +114,9 @@
         const ton = parseInt(opt.getAttribute('data-ton'));
         const sl  = parseInt(document.getElementById('slInput').value);
 
-        if (!sl || sl <= 0) { alert('So luong khong hop le'); return; }
+        if (!sl || sl <= 0) { alert('Số lượng không hợp lệ!'); return; }
         const daCo = cart.filter(c => c.id === id).reduce((s, c) => s + c.sl, 0);
-        if (daCo + sl > ton) { alert('Vuot ton kho! Con lai: ' + (ton - daCo)); return; }
+        if (daCo + sl > ton) { alert('Vượt quá tồn kho! Chỉ còn lại: ' + (ton - daCo)); return; }
 
         const existing = cart.find(c => c.id === id);
         if (existing) existing.sl += sl; else cart.push({ id, ten, gia, sl });
@@ -111,32 +128,29 @@
     function render() {
         const body = document.getElementById('gioBody');
         const hidden = document.getElementById('hiddenInputs');
-        body.innerHTML = '';
-        hidden.innerHTML = '';
+        body.innerHTML = ''; hidden.innerHTML = '';
         let tong = 0;
         cart.forEach((c, i) => {
             const tt = c.gia * c.sl;
             tong += tt;
             body.innerHTML +=
                 '<tr><td class="bold">' + c.ten + '</td>' +
-                '<td class="right">' + c.gia.toLocaleString('vi-VN') + '</td>' +
+                '<td class="right">' + c.gia.toLocaleString('vi-VN') + ' đ</td>' +
                 '<td class="right">' + c.sl + '</td>' +
-                '<td class="right">' + tt.toLocaleString('vi-VN') + '</td>' +
-                '<td class="center"><button type="button" class="btn btn-sm btn-del" onclick="xoa(' + i + ')">Xoa</button></td></tr>';
+                '<td class="right" style="color: var(--accent); font-weight: 600;">' + tt.toLocaleString('vi-VN') + ' đ</td>' +
+                '<td class="center"><button type="button" class="btn" style="background: #fce4e4; color: red; padding: 5px 10px; font-size: 12px;" onclick="xoa(' + i + ')">Xóa</button></td></tr>';
             hidden.innerHTML +=
                 '<input type="hidden" name="maHangHoa" value="' + c.id + '">' +
                 '<input type="hidden" name="soLuong" value="' + c.sl + '">';
         });
-        if (cart.length === 0)
-            body.innerHTML = '<tr><td colspan="5" class="empty">Chua co san pham trong phieu.</td></tr>';
-        document.getElementById('tongTien').textContent = tong.toLocaleString('vi-VN') + ' d';
+        if (cart.length === 0) body.innerHTML = '<tr><td colspan="5" class="empty">Giỏ hàng đang trống. Vui lòng chọn sản phẩm ở trên.</td></tr>';
+        document.getElementById('tongTien').textContent = tong.toLocaleString('vi-VN') + ' đ';
     }
 
     function kiemTra() {
-        if (cart.length === 0) { alert('Phieu phai co it nhat 1 san pham'); return false; }
+        if (cart.length === 0) { alert('Hóa đơn phải có ít nhất 1 sản phẩm!'); return false; }
         return true;
     }
-
     document.addEventListener('DOMContentLoaded', render);
 </script>
 </body>

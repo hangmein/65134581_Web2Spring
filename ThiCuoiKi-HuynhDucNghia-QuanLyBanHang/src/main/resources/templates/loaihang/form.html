@@ -3,34 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${tieuDe}">Loai hang</title>
+    <title th:text="${tieuDe} + ' - ElectroStore'">Cập nhật Phân loại</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .form-input, .form-textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--line); border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 14px; transition: all 0.2s; outline: none; }
+        .form-input:focus, .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); }
+        .field { margin-bottom: 20px; }
+        .field label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: var(--text-main); }
+        .err-msg { color: var(--red); font-size: 13px; display: block; margin-top: 5px; font-weight: 500; }
+    </style>
 </head>
 <body>
-<div class="wrap narrow">
-    <header class="topbar">
-        <div class="brand"><span class="logo">⚡</span><h1 th:text="${tieuDe}">Form</h1></div>
-        <a class="btn btn-ghost" th:href="@{/loaihang}">&larr; Quay lai</a>
-    </header>
+<div class="app-container">
 
-    <div class="form-card">
-        <form method="post" th:action="@{/loaihang/luu}" th:object="${loaiHang}">
-            <input type="hidden" th:field="*{maLoaiHang}">
-            <div class="field">
-                <label>Ten loai hang</label>
-                <input type="text" th:field="*{tenLoaiHang}" placeholder="VD: Dien thoai">
-                <span class="err" th:if="${#fields.hasErrors('tenLoaiHang')}" th:errors="*{tenLoaiHang}"></span>
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="logo">⚡</span>
+            <div>
+                <h1>ElectroStore</h1>
+                <p>Hệ thống Quản trị</p>
             </div>
-            <div class="field">
-                <label>Mo ta</label>
-                <textarea rows="3" th:field="*{moTa}"></textarea>
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-primary" type="submit">Luu</button>
-                <a class="btn btn-ghost" th:href="@{/loaihang}">Huy</a>
-            </div>
-        </form>
-    </div>
+        </div>
+        <nav class="sidebar-menu">
+            <a th:href="@{/}">📊 Bảng điều khiển</a>
+            <a class="active" th:href="@{/loaihang}">🏷️ Quản lý Loại hàng</a>
+            <a th:href="@{/hanghoa}">📦 Quản lý Hàng hóa</a>
+            <a th:href="@{/hoadon}">🧾 Quản lý Hóa đơn</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        
+        <header class="topbar">
+            <h2 class="page-title" th:text="${tieuDe}">Biểu mẫu Phân loại</h2>
+            <a class="btn btn-ghost" th:href="@{/loaihang}">&larr; Quay lại danh sách</a>
+        </header>
+
+        <div class="panel" style="max-width: 600px; margin: 0 auto; padding: 30px;">
+            <h3 style="margin: -30px -30px 25px -30px; font-size: 18px;">🏷️ Thông tin danh mục</h3>
+            
+            <form method="post" th:action="@{/loaihang/luu}" th:object="${loaiHang}">
+                <input type="hidden" th:field="*{maLoaiHang}">
+                
+                <div class="field">
+                    <label>Tên loại hàng <span style="color:red">*</span></label>
+                    <input type="text" class="form-input" th:field="*{tenLoaiHang}" placeholder="VD: Điện thoại, Laptop, Phụ kiện..." required>
+                    <span class="err-msg" th:if="${#fields.hasErrors('tenLoaiHang')}" th:errors="*{tenLoaiHang}"></span>
+                </div>
+                
+                <div class="field">
+                    <label>Mô tả chi tiết</label>
+                    <textarea class="form-textarea" rows="4" th:field="*{moTa}" placeholder="Nhập mô tả cho danh mục này..."></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button class="btn" style="background: var(--primary); color: white; flex: 1; padding: 12px; font-size: 15px;" type="submit">💾 Lưu danh mục</button>
+                    <a class="btn btn-ghost" style="padding: 12px 25px; font-size: 15px;" th:href="@{/loaihang}">Hủy bỏ</a>
+                </div>
+            </form>
+        </div>
+
+        <footer class="foot">Huỳnh Đức Nghĩa &mdash; Đồ án Spring Boot + SQL Server</footer>
+    </main>
 </div>
 </body>
 </html>

@@ -3,60 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiet hoa don</title>
+    <title>Chi tiết Hóa đơn - ElectroStore</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div class="wrap">
-    <header class="topbar">
-        <div class="brand"><span class="logo">⚡</span>
-            <div><h1 th:text="'Hoa don #' + ${hoaDon.maHoaDon}">Hoa don</h1>
-                 <p th:text="${#temporals.format(hoaDon.ngayLap, 'dd/MM/yyyy HH:mm')}">--</p></div>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="brand"><span class="logo">⚡</span><div><h1>ElectroStore</h1><p>Hệ thống Quản trị</p></div></div>
+        <nav class="sidebar-menu">
+            <a th:href="@{/}">📊 Bảng điều khiển</a>
+            <a th:href="@{/loaihang}">🏷️ Quản lý Loại hàng</a>
+            <a th:href="@{/hanghoa}">📦 Quản lý Hàng hóa</a>
+            <a class="active" th:href="@{/hoadon}">🧾 Quản lý Hóa đơn</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h2 class="page-title" th:text="'Hóa đơn #' + ${hoaDon.maHoaDon}">Hóa đơn</h2>
+                <span style="font-size: 13px; color: var(--text-muted);" th:text="${#temporals.format(hoaDon.ngayLap, 'dd/MM/yyyy HH:mm')}"></span>
+            </div>
+            <a class="btn btn-ghost" th:href="@{/hoadon}">&larr; Về danh sách</a>
+        </header>
+
+        <p th:if="${thanhCong}" th:text="${thanhCong}" style="background: #e8f8f5; color: #27ae60; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; border: 1px solid #c8e6c9;"></p>
+
+        <div class="panel" style="padding: 20px; margin-bottom: 25px; background: #f8f9fa;">
+            <div style="display: flex; justify-content: space-between;">
+                <div>
+                    <p style="margin: 0 0 8px 0;"><span style="color: var(--text-muted);">Khách hàng:</span> <strong style="font-size: 16px; color: var(--primary);" th:text="${hoaDon.tenKhachHang}">--</strong></p>
+                    <p style="margin: 0;"><span style="color: var(--text-muted);">Điện thoại:</span> <strong th:text="${hoaDon.soDienThoai}">--</strong></p>
+                </div>
+                <div style="text-align: right;">
+                    <p style="margin: 0;"><span style="color: var(--text-muted);">Nhân viên lập phiếu:</span></p>
+                    <strong th:text="${hoaDon.nguoiDung != null ? hoaDon.nguoiDung.hoTen : 'Hệ thống'}">--</strong>
+                </div>
+            </div>
         </div>
-        <a class="btn btn-ghost" th:href="@{/hoadon}">&larr; Danh sach</a>
-    </header>
 
-    <p class="err-box" th:if="${thanhCong}" th:text="${thanhCong}"
-       style="background:rgba(46,204,143,.12);border-color:rgba(46,204,143,.4);color:var(--green)"></p>
-
-    <div class="form-card" style="margin-bottom:18px">
-        <div class="row">
-            <div><span class="muted">Khach hang:</span> <span class="bold" th:text="${hoaDon.tenKhachHang}">--</span></div>
-            <div><span class="muted">SDT:</span> <span class="bold" th:text="${hoaDon.soDienThoai}">--</span></div>
+        <div class="panel" style="margin-bottom: 25px;">
+            <h3>📦 Danh sách Mặt hàng</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th class="right">Đơn giá</th>
+                        <th class="right">Số lượng</th>
+                        <th class="right">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(hoaDon.chiTiet)}">
+                        <td colspan="4" class="empty">Hóa đơn này chưa có sản phẩm nào.</td>
+                    </tr>
+                    <tr th:each="ct : ${hoaDon.chiTiet}">
+                        <td class="bold" th:text="${ct.hangHoa.tenHangHoa}">SP</td>
+                        <td class="right" th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')} + ' đ'">0</td>
+                        <td class="right" th:text="${ct.soLuong}">0</td>
+                        <td class="right" th:text="${#numbers.formatDecimal(ct.thanhTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr style="background: #fafbfc;">
+                        <td colspan="3" class="right bold" style="font-size: 16px; padding: 20px;">TỔNG THANH TOÁN:</td>
+                        <td class="right bold" style="color: var(--red); font-size: 20px; padding: 20px;" th:text="${#numbers.formatDecimal(hoaDon.tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0</td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
-        <div style="margin-top:10px"><span class="muted">Nhan vien lap:</span>
-            <span class="bold" th:text="${hoaDon.nguoiDung != null ? hoaDon.nguoiDung.hoTen : ''}">--</span></div>
-    </div>
 
-    <div class="table-card">
-        <table>
-            <thead>
-            <tr><th>San pham</th><th class="right">Don gia</th><th class="right">SL</th><th class="right">Thanh tien</th></tr>
-            </thead>
-            <tbody>
-            <tr th:if="${hoaDon.chiTiet.isEmpty()}"><td colspan="4" class="empty">Khong co san pham.</td></tr>
-            <tr th:each="ct : ${hoaDon.chiTiet}">
-                <td class="bold" th:text="${ct.hangHoa.tenHangHoa}">SP</td>
-                <td class="right" th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')}">0</td>
-                <td class="right" th:text="${ct.soLuong}">0</td>
-                <td class="right" th:text="${#numbers.formatDecimal(ct.thanhTien, 0, 'COMMA', 0, 'POINT')}">0</td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="3" class="right bold">TONG TIEN</td>
-                <td class="right bold" style="color:var(--primary)"
-                    th:text="${#numbers.formatDecimal(hoaDon.tongTien, 0, 'COMMA', 0, 'POINT')} + ' d'">0</td>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
-
-    <div class="form-actions" style="margin-top:18px">
-        <a class="btn btn-primary" th:href="@{/hoadon/them}">+ Lap phieu moi</a>
-        <a class="btn btn-del" th:href="@{/hoadon/xoa/{id}(id=${hoaDon.maHoaDon})}"
-           onclick="return confirm('Xoa hoa don nay? (so luong se duoc hoan lai kho)');">Xoa hoa don</a>
-    </div>
+        <div style="display: flex; gap: 15px;">
+            <a class="btn" style="background: var(--primary); color: white; padding: 10px 20px;" th:href="@{/hoadon/them}">✍️ Lập hóa đơn khác</a>
+            <a class="btn" style="background: transparent; color: var(--red); border: 1px solid var(--red); padding: 10px 20px;" th:href="@{/hoadon/xoa/{id}(id=${hoaDon.maHoaDon})}" onclick="return confirm('Hủy hóa đơn này? (Hệ thống sẽ hoàn số lượng lại vào kho)');">🗑️ Xóa hóa đơn</a>
+        </div>
+        
+        <footer class="foot">Huỳnh Đức Nghĩa &mdash; Đồ án Spring Boot + SQL Server</footer>
+    </main>
 </div>
 </body>
 </html>
