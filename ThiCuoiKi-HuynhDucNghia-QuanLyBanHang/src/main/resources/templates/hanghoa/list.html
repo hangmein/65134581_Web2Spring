@@ -9,21 +9,7 @@
 <body>
 <div class="app-container">
 
-    <aside class="sidebar">
-        <div class="brand">
-            <span class="logo">⚡</span>
-            <div>
-                <h1>ElectroStore</h1>
-                <p>Hệ thống Quản trị</p>
-            </div>
-        </div>
-        <nav class="sidebar-menu">
-            <a th:href="@{/}">📊 Bảng điều khiển</a>
-            <a th:href="@{/loaihang}">🏷️ Quản lý Loại hàng</a>
-            <a class="active" th:href="@{/hanghoa}">📦 Quản lý Hàng hóa</a>
-            <a th:href="@{/hoadon}">🧾 Quản lý Hóa đơn</a>
-        </nav>
-    </aside>
+    <aside th:replace="~{fragments/sidebar :: sidebar('hanghoa')}"></aside>
 
     <main class="main-content">
         

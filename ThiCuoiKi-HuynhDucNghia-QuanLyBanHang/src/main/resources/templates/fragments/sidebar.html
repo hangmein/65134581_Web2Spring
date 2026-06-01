@@ -1,0 +1,17 @@
+<aside th:fragment="sidebar(activePage)" class="sidebar">
+    <div class="brand">
+        <span class="logo">⚡</span>
+        <div>
+            <h1>ElectroStore</h1>
+            <p>Hệ thống Quản trị</p>
+        </div>
+    </div>
+
+    <nav class="sidebar-menu">
+        <a th:href="@{/}" th:classappend="${activePage == 'dashboard'} ? 'active' : ''">📊 Bảng điều khiển</a>
+        <a th:href="@{/loaihang}" th:classappend="${activePage == 'loaihang'} ? 'active' : ''">🏷️ Quản lý Loại hàng</a>
+        <a th:href="@{/hanghoa}" th:classappend="${activePage == 'hanghoa'} ? 'active' : ''">📦 Quản lý Hàng hóa</a>
+        <a th:href="@{/hoadon}" th:classappend="${activePage == 'hoadon'} ? 'active' : ''">🧾 Quản lý Hóa đơn</a>
+        <a th:href="@{/nhanvien}" th:classappend="${activePage == 'nhanvien'} ? 'active' : ''">👥 Quản lý Nhân viên</a>
+    </nav>
+</aside>
