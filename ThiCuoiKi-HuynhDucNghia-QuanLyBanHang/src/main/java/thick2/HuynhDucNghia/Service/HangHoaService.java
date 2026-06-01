@@ -11,4 +11,11 @@ public class HangHoaService {
 	 private HangHoaRepository repo;
 	 public List<HangHoa> getAll() { return repo.findAll(); }
 	 public HangHoa getById(Integer id) { return repo.findById(id).orElse(null); }
+	 public void save(HangHoa hh) { repo.save(hh); }
+	    public void delete(Integer id) { repo.deleteById(id); }
+
+	    public List<HangHoa> search(String keyword) {
+	        if (keyword == null || keyword.trim().isEmpty()) return getAll();
+	        return repo.findByTenHangHoaContainingIgnoreCase(keyword.trim());
+	    }
 }
