@@ -3,31 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${tieuDe}">Loai hang</title>
+    <title th:text="${tieuDe}">Hang hoa</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div class="wrap narrow">
     <header class="topbar">
         <div class="brand"><span class="logo">⚡</span><h1 th:text="${tieuDe}">Form</h1></div>
-        <a class="btn btn-ghost" th:href="@{/loaihang}">&larr; Quay lai</a>
+        <a class="btn btn-ghost" th:href="@{/hanghoa}">&larr; Quay lai</a>
     </header>
 
     <div class="form-card">
-        <form method="post" th:action="@{/loaihang/luu}" th:object="${loaiHang}">
-            <input type="hidden" th:field="*{maLoaiHang}">
+        <form method="post" th:action="@{/hanghoa/luu}" th:object="${hangHoa}">
+            <input type="hidden" th:field="*{maHangHoa}">
+
             <div class="field">
-                <label>Ten loai hang</label>
-                <input type="text" th:field="*{tenLoaiHang}" placeholder="VD: Dien thoai">
-                <span class="err" th:if="${#fields.hasErrors('tenLoaiHang')}" th:errors="*{tenLoaiHang}"></span>
+                <label>Ten hang hoa</label>
+                <input type="text" th:field="*{tenHangHoa}" placeholder="VD: iPhone 15 Pro">
+                <span class="err" th:if="${#fields.hasErrors('tenHangHoa')}" th:errors="*{tenHangHoa}"></span>
             </div>
+
+            <div class="field">
+                <label>Loai hang</label>
+                <select th:field="*{loaiHang}">
+                    <option th:value="null">-- Chon loai --</option>
+                    <option th:each="l : ${dsLoai}" th:value="${l.maLoaiHang}" th:text="${l.tenLoaiHang}"></option>
+                </select>
+                <span class="err" th:if="${#fields.hasErrors('loaiHang')}" th:errors="*{loaiHang}"></span>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Don gia (VND)</label>
+                    <input type="number" step="1000" th:field="*{donGia}" placeholder="0">
+                    <span class="err" th:if="${#fields.hasErrors('donGia')}" th:errors="*{donGia}"></span>
+                </div>
+                <div class="field">
+                    <label>So luong ton</label>
+                    <input type="number" th:field="*{soLuongTon}" placeholder="0">
+                    <span class="err" th:if="${#fields.hasErrors('soLuongTon')}" th:errors="*{soLuongTon}"></span>
+                </div>
+            </div>
+
             <div class="field">
                 <label>Mo ta</label>
                 <textarea rows="3" th:field="*{moTa}"></textarea>
             </div>
+
             <div class="form-actions">
                 <button class="btn btn-primary" type="submit">Luu</button>
-                <a class="btn btn-ghost" th:href="@{/loaihang}">Huy</a>
+                <a class="btn btn-ghost" th:href="@{/hanghoa}">Huy</a>
             </div>
         </form>
     </div>
