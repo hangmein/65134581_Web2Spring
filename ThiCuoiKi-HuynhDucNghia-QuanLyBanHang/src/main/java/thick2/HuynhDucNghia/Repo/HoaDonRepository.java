@@ -1,5 +1,7 @@
 package thick2.HuynhDucNghia.Repo;
 
-public class HoaDonRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import thick2.HuynhDucNghia.Model.HoaDon;
 
+public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
 }
