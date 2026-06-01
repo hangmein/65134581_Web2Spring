@@ -6,4 +6,5 @@ import thick2.HuynhDucNghia.Model.HangHoa;
 
 public interface HangHoaRepository extends JpaRepository<HangHoa, Integer> {
     List<HangHoa> findByTenHangHoaContainingIgnoreCase(String ten);
+    List<HangHoa> findByLoaiHang_MaLoaiHang(Integer maLoaiHang);
 }
