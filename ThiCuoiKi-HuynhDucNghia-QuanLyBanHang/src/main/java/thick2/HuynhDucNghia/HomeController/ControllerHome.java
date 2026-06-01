@@ -17,11 +17,9 @@ public class ControllerHome {
     // ---- Trang chu ----
     @GetMapping("/")
     public String home(HttpSession session, Model model) {
-        // 1. Lấy dữ liệu thật của Hàng hóa
         int soHangHoa = hangHoaService.getAll().size();
         model.addAttribute("soHangHoa", soHangHoa);
         
-        // 2. Truyền số 0 giả định cho Hóa đơn để tránh lỗi giao diện
         model.addAttribute("soHoaDon", 0);
         model.addAttribute("doanhThu", 0); 
         

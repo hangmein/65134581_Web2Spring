@@ -1,5 +1,7 @@
 package thick2.HuynhDucNghia.Repo;
 
-public class LoaiHangRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import thick2.HuynhDucNghia.Model.LoaiHang;
 
+public interface LoaiHangRepository extends JpaRepository<LoaiHang, Integer> {
 }
