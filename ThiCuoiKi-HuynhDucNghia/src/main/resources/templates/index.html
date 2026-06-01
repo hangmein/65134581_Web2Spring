@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chu</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="wrap">
+    <header class="topbar">
+        <div class="brand">
+            <span class="logo">⚡</span>
+            <div><h1>ElectroStore</h1><p>Quan ly ban hang</p></div>
+        </div>
+        <div class="user-box">
+            <span th:if="${session.user != null}" th:text="'Xin chao, ' + ${session.user.hoTen}">User</span>
+            <a class="btn btn-ghost" th:href="@{/logout}">Dang xuat</a>
+        </div>
+    </header>
+
+    <nav class="menu">
+        <a th:href="@{/loaihang}">Loai hang</a>
+        <a th:href="@{/hanghoa}">Hang hoa</a>
+        <a th:href="@{/hoadon}">Hoa don</a>
+    </nav>
+
+    <section class="stats stats-3">
+        <div class="stat-card">
+            <span class="stat-label">Tong hang hoa</span>
+            <span class="stat-value" th:text="${soHangHoa}">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Tong hoa don</span>
+            <span class="stat-value" th:text="${soHoaDon}">0</span>
+        </div>
+        <div class="stat-card accent">
+            <span class="stat-label">Doanh thu</span>
+            <span class="stat-value" th:text="${#numbers.formatDecimal(doanhThu, 0, 'COMMA', 0, 'POINT')} + ' d'">0 d</span>
+        </div>
+    </section>
+
+    <div class="quick-links">
+        <a class="ql-card" th:href="@{/hanghoa/them}">+ Them hang hoa</a>
+        <a class="ql-card" th:href="@{/hoadon/them}">+ Lap hoa don</a>
+        <a class="ql-card" th:href="@{/loaihang/them}">+ Them loai hang</a>
+    </div>
+
+    <footer class="foot">Huynh Duc Nghia &mdash; Spring Boot + SQL Server</footer>
+</div>
+</body>
+</html>
