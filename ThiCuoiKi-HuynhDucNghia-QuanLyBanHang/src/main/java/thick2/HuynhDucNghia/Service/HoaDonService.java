@@ -25,7 +25,11 @@ public class HoaDonService {
     @Autowired private HangHoaRepository hangHoaRepo;
 
     public List<HoaDon> getAll() { return hoaDonRepo.findAll(); }
+    
     public HoaDon getById(Integer id) { return hoaDonRepo.findById(id).orElse(null); }
+    public List<HoaDon> getHoaDonGanNhat() {
+        return hoaDonRepo.findTop5ByOrderByNgayLapDesc();
+    }
 
     @Transactional
     public HoaDon lapHoaDon(NguoiDung nv, String tenKH, String sdt,
@@ -40,6 +44,7 @@ public class HoaDonService {
             if (mh == null || sl == null || sl <= 0) continue;
             gom.merge(mh, sl, Integer::sum);
         }
+        
         if (gom.isEmpty())
             throw new IllegalArgumentException("Phieu chua co san pham hop le");
 
@@ -75,14 +80,17 @@ public class HoaDonService {
 
             tong = tong.add(hh.getDonGia().multiply(BigDecimal.valueOf(sl)));
         }
+        
         hd.setTongTien(tong);
         hoaDonRepo.save(hd);
         return hd;
     }
+    
     @Transactional
     public void xoaHoaDon(Integer id) {
         HoaDon hd = getById(id);
         if (hd == null) return;
+        
         for (ChiTietHoaDon ct : hd.getChiTiet()) {
             HangHoa hh = ct.getHangHoa();
             hh.setSoLuongTon(hh.getSoLuongTon() + ct.getSoLuong());

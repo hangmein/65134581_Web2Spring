@@ -30,7 +30,6 @@ public class ControllerHome {
     @Autowired private HoaDonService hoaDonService;
     @Autowired private LoaiHangService loaiHangService;
 
-    // ---- Dang nhap ----
     @GetMapping("/login")
     public String loginForm() { return "login"; }
 
@@ -53,7 +52,6 @@ public class ControllerHome {
         return "redirect:/login";
     }
 
-    // ---- Dashboard ----
     @GetMapping("/")
     public String home(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) return "redirect:/login";
@@ -62,7 +60,6 @@ public class ControllerHome {
         List<HoaDon> dsHoaDon = hoaDonService.getAll();
         List<LoaiHang> dsLoai = loaiHangService.getAll();
 
- 
         BigDecimal doanhThu = dsHoaDon.stream()
                 .map(HoaDon::getTongTien).reduce(BigDecimal.ZERO, BigDecimal::add);
         model.addAttribute("soLoaiHang", dsLoai.size());
@@ -84,13 +81,9 @@ public class ControllerHome {
             thongKe.add(new ThongKeLoaiHang(lh.getTenLoaiHang(), trongLoai.size(), tongTon, gt));
         }
         model.addAttribute("thongKeLoai", thongKe);
-
         model.addAttribute("hangSapHet", hangHoaService.hangSapHet(5));
 
-        List<HoaDon> ganNhat = dsHoaDon.stream()
-                .sorted((a, b) -> b.getNgayLap().compareTo(a.getNgayLap()))
-                .limit(5).toList();
-        model.addAttribute("hoaDonGanNhat", ganNhat);
+        model.addAttribute("hoaDonGanNhat", hoaDonService.getHoaDonGanNhat());
 
         return "index";
     }

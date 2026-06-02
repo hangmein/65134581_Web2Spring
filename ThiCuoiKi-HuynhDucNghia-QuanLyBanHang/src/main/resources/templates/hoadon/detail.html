@@ -8,6 +8,7 @@
 </head>
 <body>
 <div class="app-container">
+    
     <aside th:replace="~{fragments/sidebar :: sidebar('hoadon')}"></aside>
 
     <main class="main-content">
@@ -35,7 +36,7 @@
         </div>
 
         <div class="panel" style="margin-bottom: 25px;">
-            <h3>📦 Danh sách Mặt hàng</h3>
+            <h3 style="padding: 18px 20px; margin: 0; border-bottom: 1px solid var(--line); background: #fafbfc; font-size: 16px;">📦 Danh sách Mặt hàng</h3>
             <table>
                 <thead>
                     <tr>
@@ -53,7 +54,7 @@
                         <td class="bold" th:text="${ct.hangHoa.tenHangHoa}">SP</td>
                         <td class="right" th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')} + ' đ'">0</td>
                         <td class="right" th:text="${ct.soLuong}">0</td>
-                        <td class="right" th:text="${#numbers.formatDecimal(ct.thanhTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0</td>
+                        <td class="right" style="font-weight: 500;" th:text="${#numbers.formatDecimal(ct.thanhTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0</td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -66,8 +67,12 @@
         </div>
 
         <div style="display: flex; gap: 15px;">
-            <a class="btn" style="background: var(--primary); color: white; padding: 10px 20px;" th:href="@{/hoadon/them}">✍️ Lập hóa đơn khác</a>
-            <a class="btn" style="background: transparent; color: var(--red); border: 1px solid var(--red); padding: 10px 20px;" th:href="@{/hoadon/xoa/{id}(id=${hoaDon.maHoaDon})}" onclick="return confirm('Hủy hóa đơn này? (Hệ thống sẽ hoàn số lượng lại vào kho)');">🗑️ Xóa hóa đơn</a>
+            
+            <a th:if="${session.user != null && session.user.vaiTro == 'NhanVien'}" class="btn" style="background: var(--primary); color: white; padding: 10px 20px;" th:href="@{/hoadon/them}">✍️ Lập hóa đơn khác</a>
+            
+            <a class="btn" style="background: #27ae60; color: white; padding: 10px 20px; font-weight: bold;" th:href="@{/hoadon/pdf/{id}(id=${hoaDon.maHoaDon})}">🖨️ Xuất file PDF</a>
+            
+            <a th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="btn" style="background: transparent; color: var(--red); border: 1px solid var(--red); padding: 10px 20px;" th:href="@{/hoadon/xoa/{id}(id=${hoaDon.maHoaDon})}" onclick="return confirm('Hủy hóa đơn này? (Hệ thống sẽ hoàn số lượng lại vào kho)');">🗑️ Xóa hóa đơn</a>
         </div>
         
         <footer class="foot">Huỳnh Đức Nghĩa &mdash; Đồ án Spring Boot + SQL Server</footer>

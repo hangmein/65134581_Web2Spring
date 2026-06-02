@@ -12,7 +12,7 @@
 
     <aside th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></aside>
 
-    <main class="main-content">
+    <main class="main-content" style="height: 100vh; overflow-y: auto; padding-bottom: 50px;">
         
         <header class="topbar">
             <h2 class="page-title">Tổng quan Hệ thống</h2>
@@ -30,11 +30,9 @@
             <div class="stat-card"><span class="stat-label">Giá trị tồn kho</span><span class="stat-value" th:text="${#numbers.formatDecimal(giaTriTon,0,'COMMA',0,'POINT')} + ' đ'">0</span></div>
         </section>
 
-        <div class="quick-links">
+        <div class="quick-links" style="display: flex; gap: 15px; margin-bottom: 25px;">
             <a th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="ql-card" th:href="@{/hanghoa/them}">📦 Thêm Hàng Hóa Mới</a>
-            
             <a th:if="${session.user != null && session.user.vaiTro == 'Admin'}" class="ql-card" th:href="@{/loaihang/them}">🏷️ Thêm Danh Mục</a>
-
             <a th:if="${session.user != null && session.user.vaiTro == 'NhanVien'}" class="ql-card" th:href="@{/hoadon/them}">✍️ Lập Hóa Đơn Mới</a>
         </div>
 
@@ -59,7 +57,7 @@
                 <h3>⚠️ Hàng sắp hết (Tồn &lt;= 5)</h3>
                 <table>
                     <tbody>
-                    <tr th:if="${#lists.isEmpty(hangSapHet)}"><td class="empty">Tất cả hàng hóa đều dồi dào.</td></tr>
+                    <tr th:if="${#lists.isEmpty(hangSapHet)}"><td colspan="2" class="empty">Tất cả hàng hóa đều dồi dào.</td></tr>
                     <tr th:each="h : ${hangSapHet}">
                         <td class="bold" th:text="${h.tenHangHoa}">SP</td>
                         <td class="right"><span class="badge-warn" th:text="'Còn ' + ${h.soLuongTon}">Còn 0</span></td>
@@ -69,16 +67,21 @@
             </div>
         </div>
 
-        <div class="panel" style="margin-bottom:30px">
+        <div class="panel" style="clear: both; margin-top: 25px; margin-bottom: 30px;">
             <h3>🧾 Giao dịch gần đây</h3>
             <table>
                 <thead><tr><th>Mã HĐ</th><th>Ngày lập</th><th>Khách hàng</th><th class="right">Tổng tiền</th><th class="center">Thao tác</th></tr></thead>
                 <tbody>
-                <tr th:if="${#lists.isEmpty(hoaDonGanNhat)}"><td colspan="5" class="empty">Chưa có giao dịch nào được thực hiện.</td></tr>
-                <tr th:each="hd : ${hoaDonGanNhat}">
+                <tr th:if="${hoaDonGanNhat == null or #lists.isEmpty(hoaDonGanNhat)}">
+                    <td colspan="5" class="empty">Chưa có giao dịch nào được thực hiện.</td>
+                </tr>
+                
+                <tr th:if="${hoaDonGanNhat != null}" th:each="hd : ${hoaDonGanNhat}">
                     <td style="font-weight: 600;" th:text="'HD' + ${hd.maHoaDon}">1</td>
-                    <td th:text="${#temporals.format(hd.ngayLap, 'dd/MM/yyyy HH:mm')}">--</td>
-                    <td class="bold" th:text="${hd.tenKhachHang}">KH</td>
+                    
+                    <td th:text="${hd.ngayLap != null ? #temporals.format(hd.ngayLap, 'dd/MM/yyyy HH:mm') : 'N/A'}">--</td>
+                    
+                    <td class="bold" th:text="${(hd.tenKhachHang != null and hd.tenKhachHang != '') ? hd.tenKhachHang : 'Khách lẻ'}">KH</td>
                     <td class="right" style="color: var(--red); font-weight: bold;" th:text="${#numbers.formatDecimal(hd.tongTien,0,'COMMA',0,'POINT')} + ' đ'">0</td>
                     <td class="center"><a class="btn btn-sm btn-edit" th:href="@{/hoadon/{id}(id=${hd.maHoaDon})}">Xem chi tiết</a></td>
                 </tr>
